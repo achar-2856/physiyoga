@@ -9,28 +9,43 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+
     <style>
         .blog-card {
             background: var(--white);
             border-radius: var(--radius);
             overflow: hidden;
             box-shadow: var(--shadow);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e2e8f0;
         }
 
         .blog-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
+            border-color: #cbd5e1;
         }
 
         .blog-img {
             height: 200px;
-            background: #cbd5e1;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #cbd5e1;
             width: 100%;
         }
 
         .blog-content {
             padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
 
         .blog-tag {
@@ -45,6 +60,208 @@
             color: var(--gray);
             margin-bottom: 0.5rem;
             display: block;
+        }
+
+        .blog-title-link {
+            font-size: 1.25rem;
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+            line-height: 1.3;
+            transition: color 0.2s;
+        }
+
+        .blog-title-link:hover {
+            color: var(--primary);
+        }
+
+        /* Rich text article elements styling */
+        .blog-rich-content h3 {
+            margin: 2rem 0 1rem;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-family: var(--font-heading);
+            font-weight: 700;
+        }
+
+        .blog-rich-content p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #334155;
+        }
+
+        .blog-rich-content ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            list-style-type: disc;
+        }
+
+        .blog-rich-content li {
+            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            color: #334155;
+        }
+
+        .file-badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: #f1f5f9;
+            color: var(--gray);
+        }
+
+        .file-badge.badge-teal {
+            background: #f0fdfa;
+            color: #0f766e;
+            border: 1px solid #ccfbf1;
+        }
+
+        /* Search Input Focus State */
+        #blog-search:focus {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(255, 149, 0, 0.15);
+        }
+
+        /* Category Filter Pills */
+        .category-pill {
+            background-color: var(--white);
+            border: 1px solid #cbd5e1;
+            color: var(--gray);
+            padding: 0.5rem 1.25rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .category-pill:hover {
+            background-color: #f1f5f9;
+            color: var(--secondary);
+            border-color: #cbd5e1;
+        }
+
+        .category-pill.active {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.25);
+        }
+
+        /* Social Share Section */
+        .share-container {
+            margin-top: 3.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .share-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid #e2e8f0;
+            background-color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--gray);
+        }
+
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .share-btn.whatsapp:hover {
+            background-color: #25D366;
+            border-color: #25D366;
+            color: var(--white);
+        }
+
+        .share-btn.twitter:hover {
+            background-color: #000000;
+            border-color: #000000;
+            color: var(--white);
+        }
+
+        .share-btn.facebook:hover {
+            background-color: #1877F2;
+            border-color: #1877F2;
+            color: var(--white);
+        }
+
+        .share-btn.copy:hover {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: var(--white);
+        }
+
+        .share-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translate(-50%, 100px);
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 10000;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+        }
+
+        .toast-notification.show {
+            transform: translate(-50%, 0);
+            opacity: 1;
+        }
+
+        /* Rich Content Extra Styling */
+        .blog-rich-content blockquote {
+            border-left: 4px solid var(--primary);
+            background-color: #f8fafc;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            border-radius: 0 0.5rem 0.5rem 0;
+            color: var(--gray);
+        }
+
+        .blog-rich-content img {
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 1.5rem 0;
+            width: 100%;
         }
     </style>
 </head>
@@ -67,26 +284,116 @@
                 <li><a href="services.html" class="nav-link">Services</a></li>
                 <li><a href="about.html" class="nav-link">About Us</a></li>
                 <li><a href="blog.html" class="nav-link" style="color: var(--primary);">Blog</a></li>
-                <!-- <li><a href="testimonials.html" class="nav-link">Testimonials</a></li> -->
                 <li><a href="contact.html" class="btn btn-primary">Book Appointment</a></li>
             </ul>
         </div>
     </nav>
 
-    <header class="section" style="padding-top: 140px; background: var(--light);">
+    <header class="section" style="padding-top: 140px; background: var(--light); padding-bottom: 3rem;" id="blog-page-header">
         <div class="container text-center animate-on-scroll">
-            <h1>Health & Wellness Blog</h1>
-            <p>Insights, tips, and updates from Dr. Swetha</p>
+            <h1 id="blog-header-title">Health & Wellness Blog</h1>
+            <p id="blog-header-subtitle">Insights, tips, and clinical updates from Dr. Swetha</p>
         </div>
     </header>
 
-    <section class="section">
-        <div class="container text-center">
-            <div class="animate-on-scroll"
-                style="background: var(--white); padding: 5rem; border-radius: 1rem; box-shadow: var(--shadow);">
-                <div style="font-size: 4rem; margin-bottom: 2rem;">📝</div>
-                <h2>Coming Soon</h2>
-                <p style="color: var(--gray); font-size: 1.25rem;">We are working on something exciting. Stay tuned!</p>
+    <section class="section" style="background: var(--light); padding-top: 1rem; padding-bottom: 5rem;">
+        <div class="container">
+            <!-- Dynamic Blog Content Container -->
+            <div id="blog-app-container">
+                
+                <!-- List View (Default) -->
+                <div id="blog-list-view">
+                    <!-- Search & Filter Controls -->
+                    <div class="blog-controls" style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3rem;">
+                        <!-- Search Bar -->
+                        <div class="blog-search-wrapper" style="position: relative; max-width: 500px; margin: 0 auto; width: 100%;">
+                            <input type="text" id="blog-search" placeholder="Search articles by title or keywords..." style="width: 100%; padding: 0.875rem 1rem 0.875rem 3rem; border: 1px solid #cbd5e1; border-radius: 2rem; font-family: inherit; font-size: 1rem; outline: none; transition: all 0.3s;" onkeyup="window.filterBlogs()">
+                            <svg class="search-icon" style="position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; fill: none; stroke: var(--gray); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;" viewBox="0 0 24 24">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </div>
+
+                        <!-- Category Filter Pills -->
+                        <div class="blog-categories-wrapper" style="display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; overflow-x: auto; padding: 0.25rem 0;">
+                            <button class="category-pill active" onclick="window.filterCategory('All')">All</button>
+                            <button class="category-pill" onclick="window.filterCategory('Spine Health')">Spine Health</button>
+                            <button class="category-pill" onclick="window.filterCategory('Maternal Care')">Antenatal & Postnatal</button>
+                            <button class="category-pill" onclick="window.filterCategory('Yoga Therapy')">Yoga Therapy</button>
+                            <button class="category-pill" onclick="window.filterCategory('Sports Conditioning')">Sports Rehab</button>
+                            <button class="category-pill" onclick="window.filterCategory('General')">General Health</button>
+                        </div>
+                    </div>
+
+                    <div class="services-grid" id="blog-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
+                        <!-- Blog Cards will be loaded here dynamically -->
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--gray);">
+                            <p style="font-size:1.2rem;">Loading latest articles...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail View (Initially Hidden) -->
+                <div id="blog-detail-view" style="display: none; max-width: 800px; margin: 0 auto; background: var(--white); border-radius: 1rem; box-shadow: var(--shadow); overflow: hidden; border: 1px solid #e2e8f0;">
+                    <!-- Cover Image -->
+                    <div id="blog-detail-cover" style="height: 350px; background-size: cover; background-position: center; background-repeat: no-repeat; background-color: #cbd5e1; width: 100%;"></div>
+                    
+                    <!-- Content -->
+                    <div style="padding: 3rem 2.5rem;">
+                        <button onclick="window.goBackToList()" class="btn btn-secondary" style="margin-bottom: 2rem; display:inline-flex; align-items:center; gap:0.5rem; padding: 0.5rem 1rem; font-size:0.9rem; border:1px solid #cbd5e1;">&larr; Back to Articles</button>
+                        
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+                            <span id="blog-detail-category" class="file-badge badge-teal" style="font-size: 0.8rem; padding: 0.25rem 0.75rem;">Category</span>
+                            <span id="blog-detail-date" class="file-badge" style="font-size: 0.8rem; padding: 0.25rem 0.75rem;">Date</span>
+                        </div>
+
+                        <h1 id="blog-detail-title" style="font-size: 2.5rem; color: var(--secondary); margin-bottom: 1.5rem; line-height: 1.2; text-align:left;">Blog Title</h1>
+                        
+                        <div style="display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1.5rem; margin-bottom: 2rem;">
+                            <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size:1.1rem; font-family:var(--font-heading);">S</div>
+                            <div>
+                                <span style="font-weight: 600; color: var(--secondary); display: block; font-size: 0.95rem;" id="blog-detail-author">Dr. Swetha R.M</span>
+                                <span style="font-size: 0.8rem; color: var(--gray); display:block;">Author & Physiotherapist</span>
+                            </div>
+                        </div>
+
+                        <div id="blog-detail-body" class="blog-rich-content">
+                            <!-- Full post body HTML will go here -->
+                        </div>
+
+                        <!-- Embedded video container -->
+                        <div id="blog-detail-video-container" style="margin-top: 3rem; display: none; border-top: 1px solid #e2e8f0; padding-top: 2rem;">
+                            <h3 style="margin-top:0; margin-bottom: 1rem; font-size:1.25rem; color:var(--secondary);">Demonstration / Video Guide</h3>
+                            <div style="position: relative; width: 100%; border-radius: var(--radius); overflow: hidden; background: #000; box-shadow: var(--shadow);">
+                                <video id="blog-detail-video" controls style="width: 100%; display: block; max-height: 480px;"></video>
+                            </div>
+                        </div>
+
+                        <!-- Social Sharing Container -->
+                        <div class="share-container">
+                            <h4 class="share-title">Share this article:</h4>
+                            <div class="share-buttons">
+                                <button class="share-btn whatsapp" id="share-wa" aria-label="Share on WhatsApp">
+                                    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.45L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.966C16.59 1.978 14.12 .953 11.5 1.027 6.062 1.027 1.638 5.398 1.635 10.83c0 1.73.473 3.418 1.368 4.908L2.009 21.03l5.362-1.408zM17.9 14.482c-.318-.16-.1.885-.4.885s-.837-.362-1.393-.9c-.438-.39-.733-.872-.82-1.03-.087-.16-.01-.246.07-.325.07-.07.16-.186.24-.28.08-.093.107-.16.16-.32.054-.16.027-.3-.014-.38-.04-.08-.363-.876-.497-1.2-.13-.316-.26-.273-.362-.278-.093-.005-.2-.006-.307-.006-.107 0-.282.04-.43.2-.147.16-.563.55-.563 1.34s.574 1.55.654 1.66c.08.11 1.13 1.726 2.737 2.42.383.165.68.263.91.337.385.122.735.105 1.012.064.31-.047.95-.39 1.085-.768.136-.378.136-.7.095-.768-.04-.07-.15-.11-.47-.27z"/></svg>
+                                </button>
+                                <button class="share-btn twitter" id="share-tw" aria-label="Share on Twitter/X">
+                                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                </button>
+                                <button class="share-btn facebook" id="share-fb" aria-label="Share on Facebook">
+                                    <svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z"/></svg>
+                                </button>
+                                <button class="share-btn copy" id="share-copy" aria-label="Copy Article Link">
+                                    <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toast Notification Container -->
+                <div id="toast-notification" class="toast-notification">
+                    <span>📋</span> Link copied to clipboard!
+                </div>
             </div>
         </div>
     </section>
@@ -121,6 +428,316 @@
         </div>
     </footer>
     <script src="script.js"></script>
+    <script>
+        // Check if Supabase config is placeholder
+        const isSupabaseConfigured = typeof SUPABASE_URL !== 'undefined' && 
+                                     SUPABASE_URL !== 'YOUR_SUPABASE_URL' && 
+                                     SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
+
+        let supabaseClient = null;
+        if (isSupabaseConfigured) {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        // Mock blogs to display as fallback if Supabase is not configured
+        const mockBlogs = [
+            {
+                id: 'mock-1',
+                title: "5 Essential Movements to Relieve Workplace Back Pain",
+                slug: "5-essential-movements-workplace-back-pain",
+                category: "Spine Health",
+                author: "Dr. Swetha R.M",
+                summary: "Sitting at a desk all day places immense mechanical load on the lumbar spine. Here are 5 clinical movements you can do directly at your desk.",
+                content: `
+                    <p>In modern workplaces, prolonged sitting has become one of the leading contributors to mechanical low back pain. When we sit for hours, our lumbar spine loses its natural curvature, putting excessive pressure on the intervertebral discs and surrounding muscles.</p>
+                    <h3>1. The Seated Cat-Cow Stretch</h3>
+                    <p>This movement helps restore sagittal mobility to the spine and reduces muscular stiffness. Sit forward on your chair with feet flat, hands on knees. As you inhale, arch your back and look up. As you exhale, round your spine and pull your chin to your chest.</p>
+                    <h3>2. Seated Spinal Twist</h3>
+                    <p>Twisting helps hydrate the spinal discs. Sit tall, place your right hand on your left knee and twist to the left, using the chair back for gentle support. Hold for 5 deep breaths, then repeat on the other side.</p>
+                    <h3>3. The Psoas Release</h3>
+                    <p>Tight hip flexors pull the pelvis into an anterior tilt, worsening back pain. Stand up, step one foot back into a shallow lunge, tuck your tailbone under, and push your hips forward slightly until you feel a stretch in the front of your hip.</p>
+                `,
+                media_urls: ["https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800", ""],
+                created_at: new Date().toISOString()
+            },
+            {
+                id: 'mock-2',
+                title: "Maternal Wellness: Safe Antenatal Exercise Guidelines",
+                slug: "maternal-wellness-safe-antenatal-exercise-guidelines",
+                category: "Maternal Care",
+                author: "Dr. Swetha R.M",
+                summary: "Exercising during pregnancy supports maternal health, prepares the pelvic floor for labor, and improves postnatal recovery timelines.",
+                content: `
+                    <p>Pregnancy introduces significant biomechanical shifts, including a changing center of gravity and increased ligament laxity due to the hormone relaxin. Safe, targeted exercise is vital to maintain spinal alignment and manage gestational joint pain.</p>
+                    <h3>Core and Pelvic Floor Stability</h3>
+                    <p>Rather than traditional abdominal exercises, focus on deep core activation. Practice diaphragmatic breathing coupled with gentle pelvic floor contractions (Kegels) to support the abdominal wall and pelvic basin.</p>
+                    <h3>Recommended Aerobic Movements</h3>
+                    <p>Low-impact movements like swimming, prenatal yoga, and guided walking are excellent options. Always keep your exertion level to a point where you can hold a normal conversation without shortness of breath.</p>
+                `,
+                media_urls: ["https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?auto=format&fit=crop&q=80&w=800", ""],
+                created_at: new Date(Date.now() - 86400000 * 2).toISOString()
+            },
+            {
+                id: 'mock-3',
+                title: "Bridging the Gap: Moving from Pain Relief to Athletic Strength",
+                slug: "bridging-gap-moving-pain-relief-athletic-strength",
+                category: "Sports Conditioning",
+                author: "Dr. Swetha R.M",
+                summary: "Many athletes re-injure themselves because they return to high loading before restoring full biomechanical control. Learn how to progress safely.",
+                content: `
+                    <p>The biggest pitfall in sports injury recovery is assuming that the absence of pain means a full recovery. True rehabilitation requires progressive loading, motor pattern retraining, and sports-specific conditioning.</p>
+                    <h3>1. Restoring Mobility and Joint Centration</h3>
+                    <p>Before putting load on a joint (e.g. knee after meniscus or ACL injury), ensure that it has symmetric range of motion and that muscles are firing with correct timing.</p>
+                    <h3>2. Dynamic Stability Training</h3>
+                    <p>Incorporate single-leg movements, balance work, and perturbed loading to challenge proprioception. This trains the brain to protect the joint during rapid, unexpected athletic movements.</p>
+                `,
+                media_urls: ["https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80&w=800", ""],
+                created_at: new Date(Date.now() - 86400000 * 5).toISOString()
+            }
+        ];
+
+        let blogsData = [];
+        let activeCategory = 'All';
+
+        async function initBlogApp() {
+            // Check if we are viewing a single post via URL search params
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('post');
+
+            if (isSupabaseConfigured) {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('blogs')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+                    blogsData = data || [];
+                } catch (err) {
+                    console.error("Supabase blogs fetch error, using fallback mock blogs:", err);
+                    blogsData = mockBlogs;
+                }
+            } else {
+                blogsData = mockBlogs;
+            }
+
+            if (slug) {
+                const selectedBlog = blogsData.find(b => b.slug === slug || b.id === slug);
+                if (selectedBlog) {
+                    renderDetailView(selectedBlog);
+                } else {
+                    renderListView();
+                }
+            } else {
+                renderListView();
+            }
+
+            // Listen to browser back/forward buttons
+            window.addEventListener('popstate', () => {
+                const params = new URLSearchParams(window.location.search);
+                const s = params.get('post');
+                if (s) {
+                    const b = blogsData.find(post => post.slug === s || post.id === s);
+                    if (b) renderDetailView(b, false);
+                } else {
+                    renderListView(false);
+                }
+            });
+        }
+
+        window.filterCategory = function(category) {
+            activeCategory = category;
+            
+            // Update active pill UI
+            const pills = document.querySelectorAll('.category-pill');
+            pills.forEach(pill => {
+                const text = pill.textContent.trim();
+                const isMatch = (category === 'All' && text === 'All') ||
+                                (category === 'Spine Health' && text === 'Spine Health') ||
+                                (category === 'Maternal Care' && text === 'Antenatal & Postnatal') ||
+                                (category === 'Yoga Therapy' && text === 'Yoga Therapy') ||
+                                (category === 'Sports Conditioning' && text === 'Sports Rehab') ||
+                                (category === 'General' && text === 'General Health');
+                
+                pill.classList.toggle('active', isMatch);
+            });
+
+            window.filterBlogs();
+        }
+
+        window.filterBlogs = function() {
+            const searchQuery = document.getElementById('blog-search').value.toLowerCase().trim();
+            
+            const filtered = blogsData.filter(blog => {
+                const matchesSearch = blog.title.toLowerCase().includes(searchQuery) || 
+                                      blog.content.toLowerCase().includes(searchQuery) ||
+                                      (blog.summary && blog.summary.toLowerCase().includes(searchQuery));
+                
+                const matchesCategory = activeCategory === 'All' || blog.category === activeCategory;
+                
+                return matchesSearch && matchesCategory;
+            });
+
+            renderListView(true, filtered);
+        }
+
+        function renderListView(pushHistory = true, dataToRender = blogsData) {
+            const grid = document.getElementById('blog-grid');
+            const listView = document.getElementById('blog-list-view');
+            const detailView = document.getElementById('blog-detail-view');
+            const pageHeader = document.getElementById('blog-page-header');
+
+            listView.style.display = 'block';
+            detailView.style.display = 'none';
+            pageHeader.style.display = 'block';
+
+            // Only push history state if it's not a live filter event
+            if (pushHistory && dataToRender === blogsData) {
+                window.history.pushState({}, '', 'blog.html');
+            }
+
+            if (dataToRender.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--gray);">
+                        <p style="font-size:1.2rem; margin-bottom:0.5rem;">No matching articles found.</p>
+                        <p style="font-size:0.95rem;">Try adjusting your search query or switching categories.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = '';
+            dataToRender.forEach(blog => {
+                const date = new Date(blog.created_at).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+
+                const blogSlug = blog.slug || blog.id;
+                const coverImage = (blog.media_urls && blog.media_urls[0]) || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800';
+
+                const card = document.createElement('div');
+                card.className = 'blog-card';
+                card.innerHTML = `
+                    <div class="blog-img" style="background-image: url('${coverImage}');"></div>
+                    <div class="blog-content">
+                        <span class="blog-tag">${blog.category || 'General'}</span>
+                        <span class="blog-date" style="margin-top:0.25rem;">${date}</span>
+                        <a href="blog.html?post=${blogSlug}" onclick="event.preventDefault(); openPost('${blogSlug}')" class="blog-title-link">${blog.title}</a>
+                        <p style="color: var(--gray); font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.5rem; flex-grow: 1;">${blog.summary || ''}</p>
+                        <button onclick="openPost('${blogSlug}')" class="btn btn-secondary" style="margin-top: auto; align-self: flex-start; padding: 0.5rem 1rem; font-size: 0.85rem; border-color: #cbd5e1;">Read More &rarr;</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        window.openPost = function(slug) {
+            const blog = blogsData.find(b => b.slug === slug || b.id === slug);
+            if (blog) {
+                renderDetailView(blog);
+            }
+        }
+
+        function renderDetailView(blog, pushHistory = true) {
+            const listView = document.getElementById('blog-list-view');
+            const detailView = document.getElementById('blog-detail-view');
+            const pageHeader = document.getElementById('blog-page-header');
+
+            listView.style.display = 'none';
+            detailView.style.display = 'block';
+            pageHeader.style.display = 'none'; // Hide header in detail view to focus on the article
+
+            if (pushHistory) {
+                const blogSlug = blog.slug || blog.id;
+                window.history.pushState({}, '', `blog.html?post=${blogSlug}`);
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            const coverImage = (blog.media_urls && blog.media_urls[0]) || 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800';
+            document.getElementById('blog-detail-cover').style.backgroundImage = `url('${coverImage}')`;
+            
+            document.getElementById('blog-detail-category').textContent = blog.category || 'General';
+            document.getElementById('blog-detail-date').textContent = new Date(blog.created_at).toLocaleDateString('en-US', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+            document.getElementById('blog-detail-title').textContent = blog.title;
+            document.getElementById('blog-detail-author').textContent = blog.author || 'Dr. Swetha R.M';
+            document.getElementById('blog-detail-body').innerHTML = blog.content;
+
+            // Handle optional video
+            const videoContainer = document.getElementById('blog-detail-video-container');
+            const videoEl = document.getElementById('blog-detail-video');
+            
+            if (blog.media_urls && blog.media_urls[1] && isVideoUrl(blog.media_urls[1])) {
+                videoEl.src = blog.media_urls[1];
+                videoContainer.style.display = 'block';
+                const secondaryImg = document.getElementById('blog-detail-secondary-img');
+                if (secondaryImg) secondaryImg.remove();
+            } else if (blog.media_urls && blog.media_urls[1]) {
+                // If it is another image instead of a video
+                videoEl.removeAttribute('src');
+                videoContainer.style.display = 'none';
+                
+                let secondaryImg = document.getElementById('blog-detail-secondary-img');
+                if (!secondaryImg) {
+                    secondaryImg = document.createElement('img');
+                    secondaryImg.id = 'blog-detail-secondary-img';
+                    secondaryImg.style.width = '100%';
+                    secondaryImg.style.borderRadius = '1rem';
+                    secondaryImg.style.marginTop = '2rem';
+                    secondaryImg.style.boxShadow = 'var(--shadow)';
+                    document.getElementById('blog-detail-body').appendChild(secondaryImg);
+                }
+                secondaryImg.src = blog.media_urls[1];
+            } else {
+                videoEl.removeAttribute('src');
+                videoContainer.style.display = 'none';
+                const secondaryImg = document.getElementById('blog-detail-secondary-img');
+                if (secondaryImg) secondaryImg.remove();
+            }
+
+            // Setup Social Share click listeners
+            document.getElementById('share-wa').onclick = () => {
+                const shareText = `Check out this article: ${blog.title} - ${window.location.href}`;
+                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`, '_blank');
+            };
+            document.getElementById('share-tw').onclick = () => {
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(blog.title)}&url=${encodeURIComponent(window.location.href)}`, '_blank');
+            };
+            document.getElementById('share-fb').onclick = () => {
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+            };
+            document.getElementById('share-copy').onclick = () => {
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    const toast = document.getElementById('toast-notification');
+                    toast.classList.add('show');
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 2500);
+                }).catch(err => {
+                    console.error("Clipboard copy failed: ", err);
+                });
+            };
+        }
+
+        window.goBackToList = function() {
+            // Clear current URL param and filter lists back to normal or keep active filters
+            window.history.pushState({}, '', 'blog.html');
+            window.filterBlogs();
+        }
+
+        function isVideoUrl(url) {
+            if (!url) return false;
+            // Check file extension
+            const ext = url.split('.').pop().toLowerCase();
+            return ['mp4', 'webm', 'ogg', 'mov'].includes(ext) || url.includes('/video/');
+        }
+
+        // Initialize Blog App
+        initBlogApp();
+    </script>
 </body>
 
 </html>

@@ -17,6 +17,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <link rel="stylesheet" href="modal.css">
 
     <style>
         /* Custom styles for the Folder Explorer */
@@ -348,6 +353,51 @@
             margin-bottom: 1rem;
             color: #94a3b8;
         }
+
+        /* Rich text article elements styling for preview */
+        .blog-rich-content h3 {
+            margin: 1.5rem 0 0.75rem;
+            font-size: 1.4rem;
+            color: var(--secondary);
+            font-family: var(--font-heading);
+            font-weight: 700;
+        }
+
+        .blog-rich-content p {
+            margin-bottom: 1.25rem;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #334155;
+        }
+
+        .blog-rich-content ul {
+            margin-bottom: 1.25rem;
+            padding-left: 1.5rem;
+            list-style-type: disc;
+        }
+
+        .blog-rich-content li {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            color: #334155;
+        }
+        
+        .blog-rich-content blockquote {
+            border-left: 4px solid var(--primary);
+            background-color: #f8fafc;
+            padding: 0.75rem 1.25rem;
+            margin: 1.25rem 0;
+            font-style: italic;
+            border-radius: 0 0.5rem 0.5rem 0;
+            color: var(--gray);
+        }
+
+        .blog-rich-content img {
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 1.25rem 0;
+            width: 100%;
+        }
     </style>
 </head>
 
@@ -426,6 +476,16 @@
                     </div>
                     <h3 class="folder-title">Profiles & Logos</h3>
                     <p class="folder-desc">Doctor CV clinical profile, SVG vector medical logo templates, and staff resumes.</p>
+                </div>
+
+                <!-- Folder 5 (Blog Manager) -->
+                <div class="folder-card" data-folder="blog-manager">
+                    <div class="folder-icon-wrapper">
+                        <span class="folder-icon">✍️</span>
+                        <span class="file-count-badge" id="badge-blogs">Manage Blogs</span>
+                    </div>
+                    <h3 class="folder-title">Blog Manager</h3>
+                    <p class="folder-desc">Create, edit, or delete dynamic blog posts, and upload patient/clinical educational media.</p>
                 </div>
             </div>
 
@@ -591,6 +651,16 @@
         const filesListContainer = document.getElementById('files-list-container');
         const logoutBtn = document.getElementById('portal-logout-btn');
 
+        // Check if Supabase config is placeholder
+        const isSupabaseConfigured = typeof SUPABASE_URL !== 'undefined' && 
+                                     SUPABASE_URL !== 'YOUR_SUPABASE_URL' && 
+                                     SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
+
+        let supabaseClient = null;
+        if (isSupabaseConfigured) {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
         // Folder selection behavior
         folderCards.forEach(card => {
             card.addEventListener('click', () => {
@@ -606,6 +676,11 @@
         });
 
         function renderFolder(key) {
+            if (key === 'blog-manager') {
+                window.renderBlogManager();
+                return;
+            }
+
             const folderData = documentDatabase[key];
             if (!folderData) return;
 
@@ -638,7 +713,7 @@
                     <div class="file-actions">
                         <a href="${file.filename}" target="_blank" class="btn-action btn-action-view">👁️ View</a>
                         <a href="${file.filename}" download="${file.filename}" class="btn-action btn-action-download">📥 Download</a>
-                        <button onclick="printFile('${file.filename}')" class="btn-action btn-action-print">🖨️ Print / PDF</button>
+                        <button onclick="window.printFile('${file.filename}')" class="btn-action btn-action-print">🖨️ Print / PDF</button>
                     </div>
                 `;
                 filesListContainer.appendChild(item);
@@ -649,8 +724,438 @@
             filesDisplayView.style.display = 'block';
         }
 
+        // Blog Manager Functionality
+        window.renderBlogManager = async function() {
+            currentFolderTitle.textContent = "Blog Manager Dashboard";
+            noSelectionView.style.display = 'none';
+            filesDisplayView.style.display = 'block';
+
+            if (!isSupabaseConfigured) {
+                filesListContainer.innerHTML = `
+                    <div style="padding: 2rem; background: #fffbeb; border: 1px solid #fef3c7; border-radius: var(--radius); color: #b45309;">
+                        <h3 style="margin-bottom:0.5rem;">⚠️ Supabase Not Configured</h3>
+                        <p style="margin-top: 0.5rem; line-height: 1.5; font-size:0.95rem;">To start writing and managing blogs, please configure your Supabase credentials in <code>config.js</code>.</p>
+                        <p style="margin-top: 1rem; font-weight:600; font-size:0.95rem;">Setup Steps:</p>
+                        <ol style="margin-left: 1.5rem; margin-top: 0.5rem; line-height: 1.6; font-size:0.9rem;">
+                            <li>Create a free account on <a href="https://supabase.com" target="_blank" style="text-decoration: underline; color: inherit;">supabase.com</a></li>
+                            <li>Create a new project. Once active, go to <b>Project Settings &rarr; API</b> and copy the <b>Project URL</b> and <b>anon public API key</b>.</li>
+                            <li>Open <a href="config.js" style="text-decoration: underline; color: inherit;">config.js</a> and paste them.</li>
+                            <li>Create a table named <code>blogs</code> and a public storage bucket named <code>blog-media</code>.</li>
+                        </ol>
+                    </div>
+                `;
+                return;
+            }
+
+            filesListContainer.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <p style="color: var(--gray); font-size:0.95rem;">Manage Dr. Swetha's published articles, clinical stories, and videos.</p>
+                    <button class="btn btn-primary" onclick="window.showBlogForm()">➕ Write New Post</button>
+                </div>
+                <div id="blog-list-admin" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                    <p style="text-align: center; color: var(--gray); padding: 2rem;">Loading blogs...</p>
+                </div>
+            `;
+
+            loadAdminBlogsList();
+        }
+
+        async function loadAdminBlogsList() {
+            const listContainer = document.getElementById('blog-list-admin');
+            if (!listContainer) return;
+
+            try {
+                const { data: blogs, error } = await supabaseClient
+                    .from('blogs')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!blogs || blogs.length === 0) {
+                    listContainer.innerHTML = `
+                        <div style="text-align: center; padding: 3rem 1rem; border: 2px dashed #cbd5e1; border-radius: var(--radius); color: var(--gray);">
+                            <p style="font-size: 1.1rem; margin-bottom: 1rem;">No blog posts created yet.</p>
+                            <button class="btn btn-secondary" onclick="window.showBlogForm()">Create your first post</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listContainer.innerHTML = '';
+                blogs.forEach(blog => {
+                    const date = new Date(blog.created_at).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'long', day: 'numeric'
+                    });
+
+                    const item = document.createElement('div');
+                    item.className = 'file-item';
+                    item.innerHTML = `
+                        <div class="file-info-group">
+                            <div class="file-type-icon">📝</div>
+                            <div class="file-details">
+                                <h4 style="margin:0; font-size:1.1rem; color:var(--secondary);">${blog.title}</h4>
+                                <p style="margin: 0.25rem 0 0.5rem; font-size: 0.85rem; color: var(--gray);">${blog.summary || 'No summary'}</p>
+                                <div class="badge-group">
+                                    <span class="file-badge badge-teal">${blog.category || 'General'}</span>
+                                    <span class="file-badge">${date}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-actions" style="margin-left:auto;">
+                            <button onclick='window.editBlogPost(${JSON.stringify(blog).replace(/'/g, "&apos;")})' class="btn-action btn-action-view" style="background:#eff6ff; color:#1d4ed8;">✏️ Edit</button>
+                            <button onclick="window.deleteBlogPost(${blog.id})" class="btn-action" style="background:#fef2f2; color:#ef4444; border: 1px solid #fecaca;">🗑️ Delete</button>
+                        </div>
+                    `;
+                    listContainer.appendChild(item);
+                });
+            } catch (err) {
+                console.error("Error loading admin blogs:", err);
+                listContainer.innerHTML = `
+                    <div style="color: #ef4444; padding: 2rem; text-align: center;">
+                        <p>Error loading blogs: ${err.message}</p>
+                        <p style="font-size: 0.85rem; color: var(--gray); margin-top: 0.5rem;">Please check your table structure or RLS policies.</p>
+                    </div>
+                `;
+            }
+        }
+
+        window.showBlogForm = function(blog = null) {
+            window.currentEditingBlog = blog;
+            const isEdit = blog !== null;
+            currentFolderTitle.textContent = isEdit ? "Edit Blog Post" : "Write New Blog Post";
+
+            filesListContainer.innerHTML = `
+                <button class="btn btn-secondary" onclick="window.renderBlogManager()" style="margin-bottom: 1.5rem; display:inline-flex; align-items:center; gap:0.5rem; padding: 0.5rem 1rem;">&larr; Back to List</button>
+                
+                <form id="blog-editor-form" style="background: white; border: 1px solid #e2e8f0; border-radius: var(--radius); padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem;">
+                    <input type="hidden" id="blog-id" value="${isEdit ? blog.id : ''}">
+                    
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight:600; color:var(--secondary); display:block; margin-bottom:0.5rem;" for="blog-title">Blog Title</label>
+                        <input type="text" id="blog-title" class="form-input" style="border: 1px solid #cbd5e1; width:100%; padding:0.75rem; border-radius:var(--radius);" placeholder="e.g., Understanding Mechanical Back Pain" value="${isEdit ? blog.title : ''}" required>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight:600; color:var(--secondary); display:block; margin-bottom:0.5rem;" for="blog-category">Category</label>
+                            <select id="blog-category" class="form-input" style="border: 1px solid #cbd5e1; width:100%; padding:0.75rem; border-radius:var(--radius); background:white;" required>
+                                <option value="General" ${isEdit && blog.category === 'General' ? 'selected' : ''}>General Health</option>
+                                <option value="Spine Health" ${isEdit && blog.category === 'Spine Health' ? 'selected' : ''}>Spine Health</option>
+                                <option value="Maternal Care" ${isEdit && blog.category === 'Maternal Care' ? 'selected' : ''}>Antenatal & Postnatal</option>
+                                <option value="Yoga Therapy" ${isEdit && blog.category === 'Yoga Therapy' ? 'selected' : ''}>Therapeutic Yoga</option>
+                                <option value="Sports Conditioning" ${isEdit && blog.category === 'Sports Conditioning' ? 'selected' : ''}>Sports Rehab</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="font-weight:600; color:var(--secondary); display:block; margin-bottom:0.5rem;" for="blog-author">Author</label>
+                            <input type="text" id="blog-author" class="form-input" style="border: 1px solid #cbd5e1; width:100%; padding:0.75rem; border-radius:var(--radius);" value="${isEdit ? blog.author : 'Dr. Swetha R.M'}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" style="font-weight:600; color:var(--secondary); display:block; margin-bottom:0.5rem;" for="blog-summary">Summary (Short preview text)</label>
+                        <textarea id="blog-summary" class="form-textarea" rows="2" style="border: 1px solid #cbd5e1; width:100%; border-radius:var(--radius); padding:0.75rem; font-family:inherit;" placeholder="A 1-2 sentence description shown in the blog cards list..." required>${isEdit ? blog.summary : ''}</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+                            <label class="form-label" style="font-weight:600; color:var(--secondary); margin-bottom:0;" for="blog-content">Article Content (HTML allowed)</label>
+                            <div style="display:flex; gap: 0.35rem;">
+                                <button type="button" class="btn-action" style="padding:0.25rem 0.5rem; font-size:0.75rem; background:#f1f5f9; color:var(--secondary); border:1px solid #cbd5e1;" onclick="window.insertTag('<h3>', '</h3>')">H3</button>
+                                <button type="button" class="btn-action" style="padding:0.25rem 0.5rem; font-size:0.75rem; background:#f1f5f9; color:var(--secondary); border:1px solid #cbd5e1;" onclick="window.insertTag('<b>', '</b>')">Bold</button>
+                                <button type="button" class="btn-action" style="padding:0.25rem 0.5rem; font-size:0.75rem; background:#f1f5f9; color:var(--secondary); border:1px solid #cbd5e1;" onclick="window.insertTag('<i>', '</i>')">Italic</button>
+                                <button type="button" class="btn-action" style="padding:0.25rem 0.5rem; font-size:0.75rem; background:#f1f5f9; color:var(--secondary); border:1px solid #cbd5e1;" onclick="window.insertTag('<p>', '</p>')">Paragraph</button>
+                                <button type="button" class="btn-action" style="padding:0.25rem 0.5rem; font-size:0.75rem; background:#f1f5f9; color:var(--secondary); border:1px solid #cbd5e1;" onclick="window.insertTag('<ul>\\n  <li>', '</li>\\n</ul>')">List</button>
+                            </div>
+                        </div>
+                        <textarea id="blog-content" class="form-textarea" rows="12" style="border: 1px solid #cbd5e1; width:100%; font-family:var(--font-body); border-radius:var(--radius); padding:0.75rem; line-height:1.5;" placeholder="Write your full article content here. You can use standard HTML formatting tags like <h3>, <p>, <b>, <ul>, etc." required>${isEdit ? blog.content : ''}</textarea>
+                    </div>
+
+                    <!-- Media Upload Group -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; background: #f8fafc; padding: 1.25rem; border-radius: var(--radius); border: 1px dashed #cbd5e1; flex-wrap:wrap;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label class="form-label" style="font-weight:600; color:var(--secondary); display:block; margin-bottom:0.5rem;" for="header-image-file">Header Image (Featured Image)</label>
+                            <input type="file" id="header-image-file" accept="image/*" class="form-input" style="border: none; background: transparent; padding: 0.25rem 0; width:100%;">
+                            <small style="color:var(--gray); display:block; margin-top:0.25rem;">Upload a banner image. Max size 5MB.</small>
+                            ${isEdit && blog.media_urls && blog.media_urls[0] ? `<div style="margin-top:0.5rem;"><a href="${blog.media_urls[0]}" target="_blank" style="color:var(--primary); font-size:0.8rem; font-weight:600; text-decoration:underline;">View Current Image &rarr;</a></div>` : ''}
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label class="form-label" style="font-weight:600; color:var(--secondary); display:block; margin-bottom:0.5rem;" for="extra-media-file">Optional Video or Extra Image</label>
+                            <input type="file" id="extra-media-file" accept="image/*,video/*" class="form-input" style="border: none; background: transparent; padding: 0.25rem 0; width:100%;">
+                            <small style="color:var(--gray); display:block; margin-top:0.25rem;">Optional MP4 video or secondary image.</small>
+                            ${isEdit && blog.media_urls && blog.media_urls[1] ? `<div style="margin-top:0.5rem;"><a href="${blog.media_urls[1]}" target="_blank" style="color:var(--primary); font-size:0.8rem; font-weight:600; text-decoration:underline;">View Current Media &rarr;</a></div>` : ''}
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-secondary" onclick="window.renderBlogManager()">Cancel</button>
+                        <button type="button" class="btn btn-secondary" id="btn-preview-blog" onclick="window.previewBlogPost(${isEdit})" style="border-color: #cbd5e1; display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <span>👁️</span> Preview Article
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="btn-save-blog" style="display:inline-flex; align-items:center; gap:0.5rem;">
+                            <span class="spinner" id="blog-save-spinner" style="display:none; width: 16px; height: 16px;"></span>
+                            <span id="blog-save-text">${isEdit ? 'Save Changes' : 'Publish Article'}</span>
+                        </button>
+                    </div>
+                </form>
+            `;
+
+            const form = document.getElementById('blog-editor-form');
+            form.addEventListener('submit', (e) => saveBlogData(e, isEdit, blog));
+        };
+
+        window.insertTag = function(openTag, closeTag) {
+            const textarea = document.getElementById('blog-content');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const selectedText = text.substring(start, end);
+            const replacement = openTag + selectedText + closeTag;
+            
+            textarea.value = text.substring(0, start) + replacement + text.substring(end);
+            textarea.focus();
+            textarea.selectionStart = start + openTag.length;
+            textarea.selectionEnd = start + openTag.length + selectedText.length;
+        };
+
+        window.editBlogPost = function(blog) {
+            window.showBlogForm(blog);
+        };
+
+        async function uploadFileToSupabase(file, bucketName, filePath) {
+            const { data, error } = await supabaseClient.storage
+                .from(bucketName)
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: true
+                });
+
+            if (error) throw error;
+
+            // Get Public URL
+            const { data: publicUrlData } = supabaseClient.storage
+                .from(bucketName)
+                .getPublicUrl(filePath);
+
+            return publicUrlData.publicUrl;
+        }
+
+        async function saveBlogData(e, isEdit, originalBlog) {
+            e.preventDefault();
+
+            const saveBtn = document.getElementById('btn-save-blog');
+            const saveText = document.getElementById('blog-save-text');
+            const saveSpinner = document.getElementById('blog-save-spinner');
+
+            saveBtn.disabled = true;
+            saveSpinner.style.display = 'inline-block';
+            saveText.textContent = isEdit ? 'Saving...' : 'Publishing...';
+
+            const id = document.getElementById('blog-id').value;
+            const title = document.getElementById('blog-title').value;
+            const category = document.getElementById('blog-category').value;
+            const author = document.getElementById('blog-author').value;
+            const summary = document.getElementById('blog-summary').value;
+            const content = document.getElementById('blog-content').value;
+
+            // Generate clean slug from title
+            const slug = title.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)+/g, '');
+
+            try {
+                let mediaUrls = isEdit && originalBlog.media_urls ? [...originalBlog.media_urls] : [];
+
+                const headerImageFile = document.getElementById('header-image-file').files[0];
+                const extraMediaFile = document.getElementById('extra-media-file').files[0];
+
+                // Upload Header Image if selected
+                if (headerImageFile) {
+                    const timestamp = Date.now();
+                    const fileExt = headerImageFile.name.split('.').pop();
+                    const filePath = `headers/${timestamp}-${slug}.${fileExt}`;
+                    const publicUrl = await uploadFileToSupabase(headerImageFile, 'blog-media', filePath);
+                    mediaUrls[0] = publicUrl;
+                }
+
+                // Upload Extra Media if selected
+                if (extraMediaFile) {
+                    const timestamp = Date.now();
+                    const fileExt = extraMediaFile.name.split('.').pop();
+                    const filePath = `extra/${timestamp}-${slug}.${fileExt}`;
+                    const publicUrl = await uploadFileToSupabase(extraMediaFile, 'blog-media', filePath);
+                    mediaUrls[1] = publicUrl;
+                }
+
+                const blogPayload = {
+                    title,
+                    slug,
+                    category,
+                    author,
+                    summary,
+                    content,
+                    media_urls: mediaUrls,
+                    created_at: isEdit ? originalBlog.created_at : new Date().toISOString()
+                };
+
+                let responseError = null;
+
+                if (isEdit) {
+                    const { error } = await supabaseClient
+                        .from('blogs')
+                        .update(blogPayload)
+                        .eq('id', id);
+                    responseError = error;
+                } else {
+                    const { error } = await supabaseClient
+                        .from('blogs')
+                        .insert([blogPayload]);
+                    responseError = error;
+                }
+
+                if (responseError) throw responseError;
+
+                alert(isEdit ? 'Blog post saved successfully!' : 'Blog post published successfully!');
+                window.renderBlogManager();
+
+            } catch (err) {
+                console.error("Error saving blog post:", err);
+                alert("Error saving blog post: " + err.message);
+                saveBtn.disabled = false;
+                saveSpinner.style.display = 'none';
+                saveText.textContent = isEdit ? 'Save Changes' : 'Publish Article';
+            }
+        }
+
+        window.deleteBlogPost = async function(id) {
+            if (!confirm("Are you sure you want to permanently delete this blog post?")) {
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient
+                    .from('blogs')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert('Blog post deleted successfully!');
+                window.renderBlogManager();
+            } catch (err) {
+                console.error("Error deleting blog post:", err);
+                alert("Error deleting blog post: " + err.message);
+            }
+        };
+
+        window.previewBlogPost = function(isEdit) {
+            const title = document.getElementById('blog-title').value || 'Untitled Post';
+            const category = document.getElementById('blog-category').value;
+            const author = document.getElementById('blog-author').value || 'Dr. Swetha R.M';
+            const content = document.getElementById('blog-content').value || '<p>No content written yet.</p>';
+            
+            // Set text contents
+            document.getElementById('preview-title').textContent = title;
+            document.getElementById('preview-category').textContent = category;
+            document.getElementById('preview-author').textContent = author;
+            document.getElementById('preview-body').innerHTML = content;
+            
+            // Date formatting
+            let dateText = new Date().toLocaleDateString('en-US', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+            // If editing, try to get the original date
+            if (isEdit && window.currentEditingBlog && window.currentEditingBlog.created_at) {
+                dateText = new Date(window.currentEditingBlog.created_at).toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+            }
+            document.getElementById('preview-date').textContent = dateText;
+
+            // Handle Header Image Preview
+            const headerFile = document.getElementById('header-image-file').files[0];
+            const coverDiv = document.getElementById('blog-preview-cover');
+            const fallbackCover = 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=800';
+
+            const setCoverImage = (url) => {
+                coverDiv.style.backgroundImage = `url('${url}')`;
+            };
+
+            if (headerFile) {
+                const reader = new FileReader();
+                reader.onload = (e) => setCoverImage(e.target.result);
+                reader.readAsDataURL(headerFile);
+            } else if (isEdit && window.currentEditingBlog && window.currentEditingBlog.media_urls && window.currentEditingBlog.media_urls[0]) {
+                setCoverImage(window.currentEditingBlog.media_urls[0]);
+            } else {
+                setCoverImage(fallbackCover);
+            }
+
+            // Handle Extra Media Preview (Video/Image)
+            const extraFile = document.getElementById('extra-media-file').files[0];
+            const videoContainer = document.getElementById('preview-video-container');
+            const videoEl = document.getElementById('preview-video');
+            
+            // Clear any existing preview image in the preview body
+            const oldImg = document.getElementById('preview-secondary-img');
+            if (oldImg) oldImg.remove();
+
+            const isVideoUrl = (url) => {
+                if (!url) return false;
+                const ext = url.split('.').pop().toLowerCase();
+                return ['mp4', 'webm', 'ogg', 'mov'].includes(ext) || url.includes('/video/') || url.startsWith('data:video/');
+            };
+
+            const setupExtraMedia = (url, isVideo) => {
+                if (isVideo) {
+                    videoEl.src = url;
+                    videoContainer.style.display = 'block';
+                } else {
+                    videoEl.removeAttribute('src');
+                    videoContainer.style.display = 'none';
+                    
+                    const img = document.createElement('img');
+                    img.id = 'preview-secondary-img';
+                    img.style.width = '100%';
+                    img.style.borderRadius = '1rem';
+                    img.style.marginTop = '2rem';
+                    img.style.boxShadow = 'var(--shadow)';
+                    img.src = url;
+                    document.getElementById('preview-body').appendChild(img);
+                }
+            };
+
+            if (extraFile) {
+                const reader = new FileReader();
+                const isVideo = extraFile.type.startsWith('video/');
+                reader.onload = (e) => setupExtraMedia(e.target.result, isVideo);
+                reader.readAsDataURL(extraFile);
+            } else if (isEdit && window.currentEditingBlog && window.currentEditingBlog.media_urls && window.currentEditingBlog.media_urls[1]) {
+                const extraUrl = window.currentEditingBlog.media_urls[1];
+                const isVideo = isVideoUrl(extraUrl);
+                setupExtraMedia(extraUrl, isVideo);
+            } else {
+                videoEl.removeAttribute('src');
+                videoContainer.style.display = 'none';
+            }
+
+            // Show modal
+            document.getElementById('blog-preview-modal').style.display = 'block';
+        };
+
+        window.closeBlogPreview = function() {
+            document.getElementById('blog-preview-modal').style.display = 'none';
+            // Stop video playing if any
+            const videoEl = document.getElementById('preview-video');
+            if (videoEl) {
+                videoEl.pause();
+                videoEl.removeAttribute('src');
+            }
+        };
+
         // Print trigger handler
-        function printFile(url) {
+        window.printFile = function(url) {
             // Open target page in new tab
             const printWindow = window.open(url, '_blank');
             if (printWindow) {
@@ -674,6 +1179,45 @@
             window.location.replace('index.html');
         });
     </script>
+
+    <!-- Blog Preview Modal -->
+    <div id="blog-preview-modal" class="modal">
+        <div class="modal-content" style="max-width: 800px; padding: 0; overflow: hidden; margin: 3% auto;">
+            <span class="close-modal" onclick="window.closeBlogPreview()" style="top: 1rem; right: 1.5rem; color: white; background: rgba(0,0,0,0.5); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10;">&times;</span>
+            <!-- Modal Body -->
+            <div id="blog-preview-cover" style="height: 300px; background-size: cover; background-position: center; position: relative;"></div>
+            <div style="padding: 2.5rem 2.5rem 3rem;">
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+                    <span id="preview-category" class="file-badge badge-teal" style="font-size: 0.8rem; padding: 0.25rem 0.75rem;">Category</span>
+                    <span id="preview-date" class="file-badge" style="font-size: 0.8rem; padding: 0.25rem 0.75rem;">Date</span>
+                </div>
+                <h1 id="preview-title" style="font-size: 2.25rem; color: var(--secondary); margin-bottom: 1.5rem; line-height: 1.2; text-align: left;">Blog Title</h1>
+                
+                <div style="display: flex; align-items: center; gap: 0.75rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 1.5rem; margin-bottom: 2rem;">
+                    <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size:1.1rem; font-family:var(--font-heading);">S</div>
+                    <div>
+                        <span style="font-weight: 600; color: var(--secondary); display: block; font-size: 0.95rem;" id="preview-author">Dr. Swetha R.M</span>
+                        <span style="font-size: 0.8rem; color: var(--gray); display:block;">Author & Physiotherapist</span>
+                    </div>
+                </div>
+
+                <div id="preview-body" class="blog-rich-content" style="line-height: 1.8; color: #334155; font-size: 1.05rem;">
+                    <!-- Full content preview -->
+                </div>
+
+                <div id="preview-video-container" style="margin-top: 3rem; display: none; border-top: 1px solid #e2e8f0; padding-top: 2rem;">
+                    <h3 style="margin-top:0; margin-bottom: 1rem; font-size:1.25rem; color:var(--secondary);">Demonstration / Video Guide</h3>
+                    <div style="position: relative; width: 100%; border-radius: var(--radius); overflow: hidden; background: #000; box-shadow: var(--shadow);">
+                        <video id="preview-video" controls style="width: 100%; display: block; max-height: 400px;"></video>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 3rem; text-align: right; border-top: 1px solid #e2e8f0; padding-top: 1.5rem;">
+                    <button type="button" class="btn btn-secondary" onclick="window.closeBlogPreview()">Close Preview</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

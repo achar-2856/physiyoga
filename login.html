@@ -11,6 +11,10 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    
+    <!-- Supabase Integration -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
 
     <script>
         // Redirect to documents if already logged in
@@ -306,35 +310,46 @@
             const username = usernameInput.value.trim();
             const password = passwordInput.value;
 
+            // Check if Supabase config is placeholder
+            const isSupabaseConfigured = typeof SUPABASE_URL !== 'undefined' && 
+                                         SUPABASE_URL !== 'YOUR_SUPABASE_URL' && 
+                                         SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
+
             try {
-                // Compute hashes
-                const userHash = await sha256(username);
-                const passHash = await sha256(password);
+                if (isSupabaseConfigured) {
+                    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({
+                        email: username,
+                        password: password
+                    });
 
-                // Admin hashes:
-                // username: admin -> 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
-                // password: Coffee@2299 -> e3281e6c3ec62b14909f3e6c38679837f62dc24d65cd1ba9b1e5ea2a192d65cc
-                if (userHash === '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' &&
-                    passHash === 'e3281e6c3ec62b14909f3e6c38679837f62dc24d65cd1ba9b1e5ea2a192d65cc') {
+                    if (error) {
+                        throw error;
+                    }
 
-                    // Set session flag
+                    // Set session flags
                     sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('supabaseSession', JSON.stringify(data.session));
 
                     // Redirect
                     window.location.replace('documents.html');
                 } else {
-                    // Show error
-                    errorText.textContent = 'Invalid username or password.';
-                    errorBox.style.display = 'flex';
+                    // Fallback to local hardcoded credentials if Supabase is not configured
+                    const userHash = await sha256(username);
+                    const passHash = await sha256(password);
 
-                    // Reset UI
-                    spinner.style.display = 'none';
-                    submitText.textContent = 'Sign In';
-                    submitBtn.disabled = false;
+                    if (userHash === '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' &&
+                        passHash === 'e3281e6c3ec62b14909f3e6c38679837f62dc24d65cd1ba9b1e5ea2a192d65cc') {
+
+                        sessionStorage.setItem('isLoggedIn', 'true');
+                        window.location.replace('documents.html');
+                    } else {
+                        throw new Error('Invalid username or password.');
+                    }
                 }
             } catch (err) {
-                console.error('Hashing error:', err);
-                errorText.textContent = 'An error occurred. Please try again.';
+                console.error('Login error:', err);
+                errorText.textContent = err.message || 'An error occurred. Please try again.';
                 errorBox.style.display = 'flex';
 
                 spinner.style.display = 'none';

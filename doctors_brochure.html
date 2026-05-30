@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physiyoga Clinical Referral Brochure - Dr. Swetha R. M.</title>
+    <!-- Outfit and Inter Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Main website styles -->
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @font-face {
+            font-family: 'Bandipura';
+            src: url('fonts/ATSBandipura-Bold.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        :root {
+            --primary: #FF9500;
+            --primary-hover: #E68600;
+            --secondary: #0F172A;
+            --accent: #14B8A6;
+            --light: #F8FAFC;
+            --dark: #1E293B;
+            --gray: #64748B;
+            --white: #ffffff;
+            --text-dark: var(--secondary);
+            --text-muted: var(--gray);
+            --text-light: #94a3b8;
+            --border-color: rgba(15, 23, 42, 0.08);
+            --shadow-premium: 0 25px 50px -12px rgba(15, 23, 42, 0.15);
+            --page-width: 210mm;
+            --page-height: 297mm;
+        }
+
+        /* --- Preview Themes (Screen Only) --- */
+        body.preview-dark {
+            --text-dark: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        body.preview-dark .brochure-page {
+            background-color: var(--dark);
+            color: #f1f5f9;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        body.preview-dark .brochure-page::after {
+            background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.005) 0px, rgba(255, 255, 255, 0.005) 1px, transparent 1px, transparent 4px);
+        }
+
+        body.preview-dark .text-muted-custom {
+            color: #94a3b8;
+        }
+
+        body.preview-dark .section-title {
+            border-bottom: 2px solid rgba(255, 149, 0, 0.25);
+        }
+
+        body.preview-dark .card-clinical {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 149, 0, 0.3);
+        }
+
+        body.preview-dark .step-number {
+            background: rgba(255, 149, 0, 0.15);
+            color: var(--primary);
+        }
+
+        body.preview-dark .footer-bar {
+            border-top: 1.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.preview-dark .address-row {
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        body.preview-dark .kannada-text {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        body.preview-dark .kannada-subtitle {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        body.preview-dark .text-dark-custom {
+            color: #ffffff;
+        }
+
+        body.preview-light {
+            --text-dark: var(--secondary);
+            --text-muted: var(--gray);
+        }
+
+        body.preview-light .brochure-page {
+            background-color: var(--white);
+            color: var(--text-dark);
+            box-shadow: var(--shadow-premium);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        body.preview-light .brochure-page::after {
+            background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.012) 0px, rgba(0, 0, 0, 0.012) 1px, transparent 1px, transparent 4px);
+        }
+
+        body.preview-light .text-muted-custom {
+            color: var(--text-muted);
+        }
+
+        body.preview-light .section-title {
+            border-bottom: 2px solid rgba(255, 149, 0, 0.2);
+        }
+
+        body.preview-light .card-clinical {
+            background: rgba(255, 149, 0, 0.02);
+            border-color: rgba(255, 149, 0, 0.25);
+        }
+
+        body.preview-light .step-number {
+            background: rgba(255, 149, 0, 0.1);
+            color: var(--primary-hover);
+        }
+
+        body.preview-light .footer-bar {
+            border-top: 1.5px solid var(--border-color);
+        }
+
+        body.preview-light .address-row {
+            border-top: 1px dashed var(--border-color);
+        }
+
+        body.preview-light .kannada-text {
+            color: rgba(0, 0, 0, 0.45);
+        }
+
+        body.preview-light .kannada-subtitle {
+            color: rgba(0, 0, 0, 0.35);
+        }
+
+        body.preview-light .text-dark-custom {
+            color: var(--text-dark);
+        }
+
+        /* --- PREVIEW STAGE LAYOUT --- */
+        .brochure-preview-stage {
+            background: #cbd5e1;
+            padding: 4rem 1.5rem;
+            transition: background-color 0.3s ease;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            min-height: 800px;
+        }
+
+        body.preview-dark .brochure-preview-stage {
+            background: #090e1a;
+        }
+
+        /* --- VIEW CONTROLLER --- */
+        .view-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            transition: all 0.3s ease;
+        }
+
+        .view-side-by-side {
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 1700px) {
+            .view-side-by-side {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* --- BROCHURE PAGE CONTAINER --- */
+        .brochure-page {
+            width: var(--page-width);
+            height: var(--page-height);
+            position: relative;
+            padding: 12mm 14mm;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 15px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            page-break-after: always;
+            z-index: 2;
+        }
+
+        /* Repeated subtle line texture in the background */
+        .brochure-page::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* --- BACKGROUND WATERMARK --- */
+        .kannada-watermark {
+            font-family: 'Bandipura', sans-serif;
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-35deg);
+            font-size: 15rem;
+            color: rgba(255, 149, 0, 0.02);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .side-label {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--primary);
+            opacity: 0.7;
+            z-index: 5;
+        }
+
+        /* Vector Logo styles removed */
+
+        /* --- HEADER STYLING --- */
+        .brochure-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .line-accent {
+            flex-grow: 1;
+            height: 2.5px;
+            background: linear-gradient(to right, transparent, var(--primary));
+        }
+
+        .line-accent.reverse {
+            background: linear-gradient(to left, transparent, var(--primary));
+        }
+
+        .brand-logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .front-main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 12px;
+            z-index: 2;
+        }
+
+        .center-brand {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 25px;
+        }
+
+        .yellow-line {
+            flex: 1;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .brand-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 3.2rem;
+            color: var(--text-dark);
+            letter-spacing: 4px;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .brand-text span {
+            color: inherit;
+        }
+
+        .front-middle-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 6px;
+        }
+
+        .front-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .pulse-line {
+            width: 100%;
+            height: 35px;
+            color: var(--primary);
+            opacity: 0.95;
+        }
+
+        .front-tagline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            color: var(--text-dark);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .center-person-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            text-align: center;
+            z-index: 2;
+            margin-top: 8px;
+        }
+
+        .doctor-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.45rem;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .doctor-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--primary);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .brand-tagline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-top: 5px;
+        }
+
+        /* --- CONTENT BLOCKS --- */
+        .brochure-body {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 10;
+            flex-grow: 1;
+            margin-top: 10px;
+            justify-content: flex-start;
+        }
+
+        .section-block {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--primary-hover);
+            padding-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title svg {
+            width: 18px;
+            height: 18px;
+            color: var(--accent);
+        }
+
+        /* Why Choose Us columns */
+        .grid-two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .card-clinical {
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 10px 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.01);
+            transition: transform 0.2s;
+        }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.92rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .card-desc {
+            font-size: 0.8rem;
+            line-height: 1.45;
+            text-align: justify;
+        }
+
+        /* How We Work steps */
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .step-card {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .step-number-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-line {
+            flex-grow: 1;
+            height: 1.5px;
+            background: linear-gradient(to right, var(--primary), transparent);
+        }
+
+        .step-card:last-child .step-line {
+            display: none;
+        }
+
+        .step-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.88rem;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .step-desc {
+            font-size: 0.76rem;
+            line-height: 1.4;
+            text-align: justify;
+        }
+
+        /* EKG Pulse Graph Separator */
+        .ekg-separator {
+            width: 100%;
+            height: 16px;
+            color: var(--primary);
+            opacity: 0.8;
+            margin: 2px 0;
+        }
+
+        .front-quote-box {
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* --- SERVICES GRID --- */
+        .services-grid-brochure {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+        }
+
+        .service-list-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .service-item-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.84rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .service-item-title::before {
+            content: "✓";
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .service-item-desc {
+            font-size: 0.75rem;
+            line-height: 1.35;
+            padding-left: 14px;
+        }
+
+        /* Spotlight Box */
+        .home-visits-box {
+            border: 1.5px solid var(--primary);
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.02) 0%, rgba(20, 184, 166, 0.02) 100%);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.03);
+        }
+
+        .home-visits-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .home-visits-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 149, 0, 0.1);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-visits-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .home-visits-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .home-visits-text {
+            font-size: 0.78rem;
+            line-height: 1.4;
+            text-align: justify;
+        }
+
+        .home-visits-bullets {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.76rem;
+            font-weight: 500;
+        }
+
+        .home-bullet {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .home-bullet svg {
+            width: 12px;
+            height: 12px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* --- FOOTER & CONTACTS --- */
+        .footer-bar {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-top: 10px;
+            margin-top: auto;
+            /* Push to bottom of brochure page */
+            z-index: 10;
+        }
+
+        .footer-cols {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .contact-row-brochure {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+
+        .contact-icon {
+            color: var(--primary);
+            width: 14px;
+            height: 14px;
+        }
+
+        .bold-phone {
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+        }
+
+        .footer-right-qr {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .qr-badge {
+            background: white;
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            display: flex;
+        }
+
+        .qr-badge img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .qr-info-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .qr-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--primary-hover);
+        }
+
+        .qr-sub {
+            font-size: 0.6rem;
+            line-height: 1.2;
+            width: 100px;
+        }
+
+        .address-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding-top: 10px;
+            font-size: 0.76rem;
+            line-height: 1.35;
+        }
+
+        .pin-icon {
+            width: 12px;
+            height: 12px;
+            color: var(--primary);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* Branding sub-footer */
+        .brand-sub-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            margin-top: 10px;
+            border-top: 1px solid rgba(255, 149, 0, 0.15);
+            padding-top: 8px;
+            width: 100%;
+        }
+
+        .kannada-text {
+            font-family: 'Bandipura', sans-serif;
+            font-size: 1.35rem;
+            line-height: 1;
+        }
+
+        .kannada-subtitle {
+            font-family: 'Bandipura', sans-serif;
+            font-size: 0.72rem;
+            line-height: 1;
+        }
+
+        .english-sub-trans {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--primary);
+        }
+
+        /* --- TIMELINE STYLING --- */
+        .brochure-body-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+            margin-top: 5px;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            z-index: 1;
+        }
+
+        .timeline-step {
+            display: flex;
+            gap: 14px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number-circle {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 2;
+            margin-top: 1px;
+            line-height: 1;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body.preview-light .step-number-circle {
+            background-color: var(--white);
+            color: var(--primary-hover);
+        }
+
+        body.preview-dark .step-number-circle {
+            background-color: var(--dark);
+            color: var(--primary);
+        }
+
+        @media print {
+            .step-number-circle {
+                background-color: #ffffff !important;
+                color: var(--primary-hover) !important;
+                border-color: var(--primary) !important;
+            }
+
+            .timeline-line {
+                background: var(--primary) !important;
+            }
+        }
+
+        /* --- PRINT MEDIA CONFIGURATION --- */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        @media print {
+
+            /* Hide all website components */
+            .navbar,
+            .footer,
+            .hero-brochure,
+            .brochure-controls-section,
+            .mobile-menu-btn {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+            }
+
+            .brochure-preview-stage {
+                padding: 0 !important;
+                background: none !important;
+                display: block !important;
+                min-height: auto !important;
+            }
+
+            .view-container {
+                display: block !important;
+                margin-top: 0 !important;
+                width: 210mm !important;
+                max-width: 210mm !important;
+            }
+
+            .brochure-page {
+                width: 210mm !important;
+                height: 297mm !important;
+                box-shadow: none !important;
+                border: none !important;
+                background-color: #ffffff !important;
+                margin: 0 !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+            }
+
+            .brochure-page::after {
+                background-image: none !important;
+            }
+
+            /* Ensure light theme print elements */
+            .brochure-page {
+                color: var(--secondary) !important;
+            }
+
+            .text-muted-custom {
+                color: var(--gray) !important;
+            }
+
+            .section-title {
+                color: var(--primary) !important;
+                border-bottom: 2px solid rgba(255, 149, 0, 0.2) !important;
+            }
+
+            .card-clinical {
+                background: rgba(255, 149, 0, 0.02) !important;
+                border-color: rgba(255, 149, 0, 0.25) !important;
+                color: var(--secondary) !important;
+            }
+
+            .step-number {
+                background: rgba(255, 149, 0, 0.1) !important;
+                color: var(--primary-hover) !important;
+            }
+
+            .home-visits-box {
+                border-color: var(--primary) !important;
+                background: rgba(255, 149, 0, 0.01) !important;
+            }
+
+            .kannada-text {
+                color: rgba(15, 23, 42, 0.45) !important;
+            }
+
+            .kannada-subtitle {
+                color: rgba(15, 23, 42, 0.35) !important;
+            }
+
+            .text-dark-custom {
+                color: var(--secondary) !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="preview-light">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-text">
+                    <span class="logo-title" style="color: var(--secondary);">Physi<span
+                            style="color: var(--primary);">yoga</span></span>
+                    <span class="logo-subtitle" style="color: var(--secondary);">Movement is <span
+                            style="color: var(--primary);">Medicine</span></span>
+                </div>
+            </a>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="blog.html" class="nav-link">Blog</a></li>
+                <li><a href="contact.html" class="btn btn-primary">Book Appointment</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Digital Hero / Info Section -->
+    <header class="section hero-brochure"
+        style="padding-top: 160px; padding-bottom: 3rem; background: linear-gradient(135deg, #FFF7ED 0%, #F0FDFA 100%); text-align: center;">
+        <div class="container" style="max-width: 900px; margin: 0 auto;">
+            <h1
+                style="font-size: 3.5rem; margin-bottom: 1.5rem; color: var(--secondary); font-family: var(--font-heading); font-weight: 800; line-height: 1.15;">
+                Clinical Referral <span style="color: var(--primary);">Brochure</span>
+            </h1>
+            <p
+                style="color: var(--gray); font-size: 1.2rem; line-height: 1.7; font-family: var(--font-body); font-weight: 400; max-width: 750px; margin: 0 auto;">
+                Physiyoga partners with primary care physicians, orthopaedic surgeons, and health practitioners to
+                deliver evidence-based recovery pathways. Preview our professional referral document below, toggle
+                display configurations, or print a copy directly.
+            </p>
+        </div>
+    </header>
+
+    <!-- Interactive Stage Controls -->
+    <div class="brochure-controls-section"
+        style="background: var(--white); padding: 1.25rem 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); position: sticky; top: 100px; z-index: 100;">
+        <div class="container" style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+            <button class="btn btn-secondary" id="view-toggle" style="display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="9"></rect>
+                    <rect x="14" y="3" width="7" height="5"></rect>
+                    <rect x="14" y="12" width="7" height="9"></rect>
+                    <rect x="3" y="16" width="7" height="5"></rect>
+                </svg>
+                <span id="view-text">Side-by-Side View</span>
+            </button>
+            <button class="btn btn-secondary" id="theme-toggle" style="display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                Toggle Theme
+            </button>
+            <button class="btn btn-primary" onclick="window.print()"
+                style="display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    style="stroke: currentColor;">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                Print / Save PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Brochure Layout Container -->
+    <div class="brochure-preview-stage">
+        <div class="view-container" id="view-wrapper">
+
+            <!-- ==================== FRONT SIDE (PAGE 1) ==================== -->
+            <div class="brochure-page" id="front-page">
+                <div class="kannada-watermark">ಫಿಸಿಯೋಗ</div>
+                <div class="side-label">Page 1 • Front</div>
+
+                <!-- Header Section -->
+                <div class="front-main-content">
+                    <div class="center-brand">
+                        <div class="yellow-line"></div>
+                        <div class="brand-text">PHYSI<span>YOGA</span></div>
+                        <div class="yellow-line"></div>
+                    </div>
+
+                    <div class="front-middle-content">
+                        <div class="front-subtitle">Restore • Rebuild • Realign</div>
+
+                        <!-- Pulse Line (EKG/Heartbeat) -->
+                        <svg class="pulse-line" viewBox="0 0 300 40" fill="none" stroke="currentColor"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M 0,20 L 110,20 L 113,17 L 116,20 L 118,23 L 121,20 L 124,2 L 128,38 L 132,20 L 136,15 L 141,20 L 165,20 L 168,17 L 171,20 L 173,23 L 176,20 L 179,2 L 183,38 L 187,20 L 191,15 L 196,20 L 300,20"
+                                stroke-width="1.5"></path>
+                        </svg>
+
+                        <div class="front-tagline">Movement is Medicine</div>
+
+                        <!-- Doctor Details -->
+                        <div class="center-person-info">
+                            <div class="doctor-name">Dr. Swetha R.M (PT)</div>
+                            <div class="doctor-title">Founder &amp; Physiotherapist</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body Section -->
+                <div class="brochure-body brochure-body-grid">
+
+                    <!-- Left Column: Why Choose Us -->
+                    <div class="section-block"
+                        style="height: 100%; display: flex; flex-direction: column; justify-content: flex-start; gap: 8px;">
+                        <h2 class="section-title">Clinical Excellence: Why Choose Us</h2>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div class="card-clinical">
+                                <h3 class="card-title text-dark-custom">One-on-One Care</h3>
+                                <p class="card-desc text-muted-custom">Every session is dedicated solely to a single
+                                    patient. No double-booking or shared therapists, ensuring complete clinical focus,
+                                    thorough assessment, and customized therapy execution.</p>
+                            </div>
+                            <div class="card-clinical">
+                                <h3 class="card-title text-dark-custom">Evidence-Based Practice</h3>
+                                <p class="card-desc text-muted-custom">Clinical rehabilitation protocols are built upon
+                                    musculoskeletal science and verified tissue healing timelines. Treatments adjust
+                                    dynamically based on daily objective measurements.</p>
+                            </div>
+                            <div class="card-clinical">
+                                <h3 class="card-title text-dark-custom">Patient Education</h3>
+                                <p class="card-desc text-muted-custom">Patient education focused on condition
+                                    understanding, body mechanics, and self-management strategies. Empowering
+                                    individuals with knowledge for injury prevention, recovery, and long-term health.
+                                </p>
+                            </div>
+                            <div class="card-clinical">
+                                <h3 class="card-title text-dark-custom">Fear-Avoidance Resolution</h3>
+                                <p class="card-desc text-muted-custom">We incorporate pain-neuroscience education and
+                                    graded exposure loading. This method builds psychological confidence, eliminates
+                                    movement fear, and prevents injury relapse.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: How We Work (Vertical Timeline) -->
+                    <div class="section-block"
+                        style="height: 100%; display: flex; flex-direction: column; justify-content: flex-start; gap: 8px;">
+                        <h2 class="section-title">Clinical Methodology: How We Work</h2>
+                        <div class="timeline-container">
+                            <div class="timeline-line"></div>
+
+                            <!-- Step 1 -->
+                            <div class="timeline-step">
+                                <div class="step-number-circle">01</div>
+                                <div style="display: flex; flex-direction: column; gap: 2px;">
+                                    <h3 class="step-title text-dark-custom"
+                                        style="font-size: 0.86rem; font-weight: 700; text-transform: uppercase; margin: 0;">
+                                        Assess</h3>
+                                    <p class="step-desc text-muted-custom"
+                                        style="margin: 0; font-size: 0.74rem; line-height: 1.35;">Comprehensive
+                                        biomechanical assessment and movement system diagnosis to isolate core
+                                        dysfunctions.</p>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 -->
+                            <div class="timeline-step">
+                                <div class="step-number-circle">02</div>
+                                <div style="display: flex; flex-direction: column; gap: 2px;">
+                                    <h3 class="step-title text-dark-custom"
+                                        style="font-size: 0.86rem; font-weight: 700; text-transform: uppercase; margin: 0;">
+                                        Restore</h3>
+                                    <p class="step-desc text-muted-custom"
+                                        style="margin: 0; font-size: 0.74rem; line-height: 1.35;">Targeted pain
+                                        modulation, tissue mobilization, and joint stabilization to restore normal
+                                        arthrokinematics.</p>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 -->
+                            <div class="timeline-step">
+                                <div class="step-number-circle">03</div>
+                                <div style="display: flex; flex-direction: column; gap: 2px;">
+                                    <h3 class="step-title text-dark-custom"
+                                        style="font-size: 0.86rem; font-weight: 700; text-transform: uppercase; margin: 0;">
+                                        Strengthen</h3>
+                                    <p class="step-desc text-muted-custom"
+                                        style="margin: 0; font-size: 0.74rem; line-height: 1.35;">Graded loading and
+                                        motor-control retraining designed to build muscle capacity and tissue tolerance.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Step 4 -->
+                            <div class="timeline-step">
+                                <div class="step-number-circle">04</div>
+                                <div style="display: flex; flex-direction: column; gap: 2px;">
+                                    <h3 class="step-title text-dark-custom"
+                                        style="font-size: 0.86rem; font-weight: 700; text-transform: uppercase; margin: 0;">
+                                        Reinforce</h3>
+                                    <p class="step-desc text-muted-custom"
+                                        style="margin: 0; font-size: 0.74rem; line-height: 1.35;">Integrating functional
+                                        movement patterns and breathing mechanics to secure long-term physical
+                                        resilience.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer Area -->
+                <div class="footer-bar">
+                    <div class="front-quote-box">
+                        Clinical Expertise meets Holistic Balance<br>
+                        <span
+                            style="font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; margin-top: 5px; display: inline-block;">evidence
+                            based physiotherapy meets traditional wisdom of yoga</span>
+                    </div>
+                    <div class="brand-sub-footer">
+                        <div class="kannada-text">ಫಿಸಿಯೋಗ</div>
+                        <div class="kannada-subtitle">ಭೌತಿಕ ಚಿಕಿತ್ಸೆ ಮತ್ತು ಯೋಗ</div>
+                        <div class="english-sub-trans">Physiotherapy and Yoga</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== BACK SIDE (PAGE 2) ==================== -->
+            <div class="brochure-page" id="back-page">
+                <div class="kannada-watermark">ಫಿಸಿಯೋಗ</div>
+                <div class="side-label">Page 2 • Back</div>
+
+                <!-- Header Section -->
+                <div class="brochure-header">
+                    <div class="logo-row">
+                        <div class="line-accent"></div>
+                        <div class="brand-logo-container"
+                            style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                            <div class="brand-text text-dark-custom" style="font-size: 1.8rem; line-height: 1;">
+                                PHYSI<span>YOGA</span></div>
+                            <div class="brand-tagline" style="font-size: 0.65rem; letter-spacing: 2px;">Clinical
+                                Rehabilitation Practice</div>
+                        </div>
+                        <div class="line-accent reverse"></div>
+                    </div>
+                </div>
+
+                <!-- Body Section -->
+                <div class="brochure-body" style="gap: 18px;">
+
+                    <!-- Section: Services We Provide -->
+                    <div class="section-block">
+                        <h2 class="section-title">Clinical Services We Provide</h2>
+                        <div class="services-grid-brochure">
+                            <div class="service-list-item">
+                                <h3 class="service-item-title text-dark-custom">Musculoskeletal Physiotherapy</h3>
+                                <p class="service-item-desc text-muted-custom">Detailed care for acute/chronic joint
+                                    pains,
+                                    muscle strains, tendinopathy, and repetitive strain injuries.</p>
+                            </div>
+                            <div class="service-list-item">
+                                <h3 class="service-item-title text-dark-custom">Post-Surgical Rehabilitation</h3>
+                                <p class="service-item-desc text-muted-custom">Staged, protocol-based rehabilitation to
+                                    restore range of motion, muscle activation, and limb function.</p>
+                            </div>
+                            <div class="service-list-item">
+                                <h3 class="service-item-title text-dark-custom">Movement & Biomechanical Analysis</h3>
+                                <p class="service-item-desc text-muted-custom">Objective video analysis and diagnostic
+                                    movement screens to isolate faults contributing to pathology.</p>
+                            </div>
+                            <div class="service-list-item">
+                                <h3 class="service-item-title text-dark-custom">Joint Stability & Motor Control</h3>
+                                <p class="service-item-desc text-muted-custom">Targeted neural activation and
+                                    neuromuscular
+                                    re-education for chronic instability and movement deficits.</p>
+                            </div>
+                            <div class="service-list-item">
+                                <h3 class="service-item-title text-dark-custom">Antenatal & Postnatal Care</h3>
+                                <p class="service-item-desc text-muted-custom">Ergonomics, pelvic floor conditioning,
+                                    and
+                                    safe core restoration for pre/post-pregnancy conditions.</p>
+                            </div>
+                            <div class="service-list-item">
+                                <h3 class="service-item-title text-dark-custom">Sports & Conditioning Bridge</h3>
+                                <p class="service-item-desc text-muted-custom">Bridging the gap between rehabilitation
+                                    and
+                                    return-to-sport with customized reactive loading programs.</p>
+                            </div>
+                            <div class="service-list-item">
+                                <h3 class="service-item-title text-dark-custom">Breathing & Posture Integration</h3>
+                                <p class="service-item-desc text-muted-custom">Re-patterning breathing mechanics to
+                                    optimize
+                                    intra-abdominal pressure, core control, and spinal loading.</p>
+                            </div>
+                            <div class="service-list-item">
+                                <h3 class="service-item-title text-dark-custom">Therapeutic Movement Integration</h3>
+                                <p class="service-item-desc text-muted-custom">Select yoga postures utilized as low-load
+                                    mobility and stability tools under clinical guidance.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Home Visits Spotlight -->
+                    <div class="section-block">
+                        <div class="home-visits-box">
+                            <div class="home-visits-header">
+                                <div class="home-visits-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                    </svg>
+                                </div>
+                                <h3 class="home-visits-title text-dark-custom">Home Visits for Post-Operative Cases</h3>
+                            </div>
+                            <div class="home-visits-grid">
+                                <div class="home-visits-text text-muted-custom">
+                                    For patients facing acute mobility restrictions immediately following major
+                                    surgeries,
+                                    we deliver **fully clinical on-call home physiotherapy**. We ensure early
+                                    mobilization
+                                    protocols are safely executed in the patient's home environment, following strict
+                                    tissue
+                                    healing timelines and direct surgeon coordination. This minimizes postoperative
+                                    complications such as joint stiffness and muscle atrophy.
+                                </div>
+                                <div class="home-visits-bullets text-dark-custom">
+                                    <div class="home-bullet">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <span>TKR & THR Rehab</span>
+                                    </div>
+                                    <div class="home-bullet">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <span>Spine Fusion / Discectomy</span>
+                                    </div>
+                                    <div class="home-bullet">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <span>ACL & Ligament Repairs</span>
+                                    </div>
+                                    <div class="home-bullet">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <path d="M20 6L9 17l-5-5" />
+                                        </svg>
+                                        <span>Post-Fracture Mobilization</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer Area -->
+                <div class="footer-bar">
+                    <div class="footer-cols">
+                        <!-- Contacts -->
+                        <div class="footer-left text-dark-custom">
+                            <div class="contact-row-brochure">
+                                <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                    </path>
+                                </svg>
+                                <span class="bold-phone">+91 9606044310 / +91 9901377434</span>
+                            </div>
+                            <div class="contact-row-brochure">
+                                <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                    </path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                                <span>dr.swetha@physiyoga.in</span>
+                            </div>
+                            <div class="contact-row-brochure">
+                                <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <path
+                                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                                    </path>
+                                </svg>
+                                <span>www.physiyoga.in</span>
+                            </div>
+                        </div>
+
+                        <!-- Scan QR Location -->
+                        <div class="footer-right-qr">
+                            <div class="qr-badge">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https%3A%2F%2Fmaps.app.goo.gl%2FMJdLWusp6R1fvdPx8"
+                                    alt="Location QR Code">
+                            </div>
+                            <div class="qr-info-text">
+                                <div class="qr-title">Scan Location</div>
+                                <div class="qr-sub text-muted-custom">Scan using mobile camera to find clinic location
+                                    on
+                                    Google Maps</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address Row -->
+                    <div class="address-row text-muted-custom">
+                        <svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <span>No 9, First Floor, Bharath Housing Society, 60 Feet Road, Thurahalli Rd, near Gubbalala
+                            Lake,
+                            Bengaluru, Karnataka 560061</span>
+                    </div>
+
+                    <!-- Kannada Branding sub-footer -->
+                    <div class="brand-sub-footer" style="margin-top: 5px;">
+                        <div class="kannada-text">ಫಿಸಿಯೋಗ</div>
+                        <div class="kannada-subtitle">ಭೌತಿಕ ಚಿಕಿತ್ಸೆ ಮತ್ತು ಯೋಗ</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <a href="index.html" class="footer-logo">Physi<span style="color: var(--primary);">yoga</span></a>
+                    <p style="color: var(--gray);">Movement is medicine</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;">Contact Us</h4>
+                    <ul class="footer-links">
+                        <li>📞 9606044310</li>
+                        <li>✉️ dr.swetha@physiyoga.in</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 Physiyoga. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts for UI Interactions -->
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme Toggle Logic
+            const bodyEl = document.body;
+            const themeToggleBtn = document.getElementById('theme-toggle');
+
+            themeToggleBtn.addEventListener('click', () => {
+                if (bodyEl.classList.contains('preview-light')) {
+                    bodyEl.classList.remove('preview-light');
+                    bodyEl.classList.add('preview-dark');
+                } else {
+                    bodyEl.classList.remove('preview-dark');
+                    bodyEl.classList.add('preview-light');
+                }
+            });
+
+            // View Toggler (Side-by-Side vs Stacked) Logic
+            const viewToggleBtn = document.getElementById('view-toggle');
+            const viewWrapper = document.getElementById('view-wrapper');
+            const viewText = document.getElementById('view-text');
+
+            viewToggleBtn.addEventListener('click', () => {
+                if (viewWrapper.classList.contains('view-side-by-side')) {
+                    viewWrapper.classList.remove('view-side-by-side');
+                    viewText.innerText = 'Side-by-Side View';
+                } else {
+                    viewWrapper.classList.add('view-side-by-side');
+                    viewText.innerText = 'Stacked View';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

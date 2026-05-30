@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physiyoga Patient Case File Cover</title>
+    <!-- Outfit and Inter Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Bandipura';
+            src: url('fonts/ATSBandipura-Bold.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        :root {
+            --primary: #FF9500;
+            /* Accent Gold/Orange */
+            --bg-color: #ffffff;
+            /* Light theme background */
+            --text-dark: #161616;
+            /* Deep matte black/grey for main text */
+            --text-muted: #555555;
+            /* Medium grey for secondary text */
+            --text-light: #777777;
+            /* Light grey for subtitles */
+            --border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #cbd5e1;
+            /* Professional background for screen display */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* --- Print Control Button --- */
+        .btn-print {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.35);
+            z-index: 1000;
+            transition: all 0.2s ease;
+        }
+
+        .btn-print:hover {
+            background: #e08400;
+            transform: translateY(-2px);
+        }
+
+        /* --- FOLDER CONTAINER --- */
+        /* Sized to 220mm x 310mm to act as standard A4 Presentation Folder Cover */
+        .folder-cover {
+            width: 220mm;
+            height: 310mm;
+            position: relative;
+            background-color: var(--bg-color);
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22mm 18mm;
+            /* Subtle horizontal stripe texture matching brand visiting cards (dark stripes on light BG) */
+            background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.012) 0px, rgba(0, 0, 0, 0.012) 1px, transparent 1px, transparent 4px);
+            page-break-after: always;
+            margin-bottom: 40px;
+        }
+
+        /* --- BACKGROUND WATERMARK --- */
+        .kannada-watermark {
+            font-family: 'Bandipura', sans-serif;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-35deg);
+            font-size: 14rem;
+            color: rgba(255, 149, 0, 0.025);
+            /* Very subtle primary watermark */
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* --- TOP BRAND SECTION --- */
+        .front-main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 22px;
+            z-index: 2;
+        }
+
+
+        .center-brand {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 25px;
+        }
+
+        .yellow-line {
+            flex: 1;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .brand-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 3.2rem;
+            color: var(--text-dark);
+            /* Dark logo on light background */
+            letter-spacing: 4px;
+            display: flex;
+            align-items: center;
+            text-transform: uppercase;
+        }
+
+        .brand-text span {
+            color: var(--text-dark);
+        }
+
+        .front-middle-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 8px;
+        }
+
+        .front-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .pulse-line {
+            width: 100%;
+            height: 35px;
+            color: var(--primary);
+            opacity: 0.95;
+        }
+
+        .front-tagline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            color: var(--text-dark);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .center-person-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            text-align: center;
+            z-index: 2;
+            margin-top: 15px;
+            /* Spacing below tagline */
+        }
+
+        .doctor-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.45rem;
+            /* Scaled up for folder cover */
+            color: var(--text-dark);
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .doctor-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            /* Scaled up for folder cover */
+            color: var(--primary);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* --- BOTTOM PATIENT DETAILS SECTION --- */
+        .patient-box {
+            width: 100%;
+            max-width: 170mm;
+            border: 1.5px solid rgba(255, 149, 0, 0.4);
+            /* Slightly bolder gold border */
+            background: rgba(255, 255, 255, 0.7);
+            /* Translucent light box */
+            border-radius: 8px;
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 2;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            margin-bottom: 12mm;
+        }
+
+        .patient-box-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-align: center;
+            border-bottom: 1.5px solid rgba(255, 149, 0, 0.25);
+            padding-bottom: 12px;
+            margin-bottom: 5px;
+        }
+
+        .patient-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px 30px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .field-group {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .field-label {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .field-line {
+            flex-grow: 1;
+            border-bottom: 1.5px dashed rgba(0, 0, 0, 0.15);
+            /* Dark dashed lines on light BG */
+            height: 20px;
+        }
+
+        .field-value-static {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            padding-bottom: 2px;
+            border-bottom: 1.5px solid rgba(255, 149, 0, 0.25);
+            flex-grow: 1;
+        }
+
+        /* --- FOOTER SECTION --- */
+        .front-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            /* Increased space between footer elements */
+            width: 100%;
+            z-index: 2;
+        }
+
+        .front-bottom {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            line-height: 1.1;
+            margin-bottom: 3px;
+        }
+
+        .kannada-text {
+            font-family: 'Bandipura', sans-serif;
+            text-align: center;
+            font-size: 1.8rem;
+            color: rgba(0, 0, 0, 0.45);
+            /* Clearly visible dark color */
+            user-select: none;
+            line-height: 1.1;
+        }
+
+        .kannada-subtitle {
+            font-family: 'Bandipura', sans-serif;
+            text-align: center;
+            font-size: 0.95rem;
+            color: rgba(0, 0, 0, 0.35);
+            /* Clearly visible dark color */
+            user-select: none;
+            line-height: 1.2;
+        }
+
+        .kannada-english-subtitle {
+            font-family: 'Outfit', sans-serif;
+            text-align: center;
+            font-size: 1.25rem;
+            color: rgba(0, 0, 0, 0.45);
+            /* Clearly visible dark color matching kannada-text */
+            user-select: none;
+            line-height: 1.2;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* --- BACK COVER STYLES --- */
+        .back-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 12px;
+            z-index: 2;
+        }
+
+        .back-content {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 35px;
+            width: 100%;
+            margin-top: 10mm;
+            margin-bottom: 10mm;
+            align-items: start;
+            z-index: 2;
+        }
+
+        .about-container,
+        .services-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 1.5px solid rgba(255, 149, 0, 0.3);
+            padding-bottom: 8px;
+            margin-bottom: 5px;
+        }
+
+        .section-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+
+        .about-container p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .services-list-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .service-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .service-item strong {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.2;
+        }
+
+        .service-item strong::before {
+            content: "✓";
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .service-item p {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            padding-left: 18px;
+        }
+
+        .back-footer-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-top: 1.5px solid var(--border-color);
+            padding-top: 15px;
+            z-index: 2;
+            margin-top: auto;
+            /* Push to bottom of flex container */
+        }
+
+        .footer-split {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .footer-contacts {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .footer-contact-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-icon {
+            color: var(--primary);
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
+
+        .footer-contact-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            letter-spacing: 0.5px;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .footer-qr-code {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .qr-code-box {
+            background: white;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code-box img {
+            width: 65px;
+            height: 65px;
+            display: block;
+        }
+
+        .qr-code-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.65rem;
+            color: var(--primary);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .footer-address {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            width: 100%;
+            border-top: 1.5px dashed var(--border-color);
+            padding-top: 12px;
+        }
+
+        .address-pin-icon {
+            width: 12px;
+            height: 12px;
+            margin-top: 2px;
+        }
+
+        .address-paragraph {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            flex: 1;
+            text-align: left;
+        }
+
+        /* --- PRINT MEDIA LAYOUT --- */
+        @page {
+            size: 220mm 310mm;
+            margin: 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+                display: block;
+            }
+
+            .btn-print {
+                display: none;
+            }
+
+            .folder-cover {
+                width: 220mm !important;
+                height: 310mm !important;
+                box-shadow: none !important;
+                border: none !important;
+                background-color: #ffffff !important;
+            }
+
+            .yellow-line {
+                background-color: #FF9500 !important;
+            }
+
+            .brand-text,
+            .brand-text span,
+            .doctor-name {
+                color: #161616 !important;
+            }
+
+            .doctor-title {
+                color: #FF9500 !important;
+            }
+
+            .pulse-line {
+                color: #FF9500 !important;
+            }
+
+            .patient-box {
+                border-color: rgba(255, 149, 0, 0.4) !important;
+                background-color: #ffffff !important;
+            }
+
+            .patient-box-title {
+                color: #FF9500 !important;
+                border-color: rgba(255, 149, 0, 0.25) !important;
+            }
+
+            .kannada-text {
+                color: rgba(0, 0, 0, 0.45) !important;
+            }
+
+            .kannada-subtitle {
+                color: rgba(0, 0, 0, 0.35) !important;
+            }
+
+            .kannada-english-subtitle {
+                color: rgba(0, 0, 0, 0.45) !important;
+            }
+
+            .section-title {
+                color: #FF9500 !important;
+                border-color: rgba(255, 149, 0, 0.25) !important;
+            }
+
+            .section-subtitle {
+                color: #161616 !important;
+            }
+
+            .service-item strong::before {
+                color: #FF9500 !important;
+            }
+
+            .footer-icon {
+                color: #FF9500 !important;
+            }
+
+            .qr-code-text {
+                color: #FF9500 !important;
+            }
+
+            .about-container p,
+            .service-item p,
+            .address-paragraph,
+            .footer-contact-text {
+                color: #555555 !important;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="btn-print" onclick="window.print()">Print Case Cover</button>
+
+    <div class="folder-cover">
+
+        <div class="kannada-watermark">ಫಿಸಿಯೋಗ</div>
+
+        <!-- Top Brand Group (Matching Visiting Card) -->
+        <div class="front-main-content">
+
+            <div class="center-brand">
+                <div class="yellow-line"></div>
+                <div class="brand-text">PHYSI<span>YOGA</span></div>
+                <div class="yellow-line"></div>
+            </div>
+
+            <div class="front-middle-content">
+                <div class="front-subtitle">Restore &bull; Rebuild &bull; Realign</div>
+
+                <!-- Pulse Line (EKG/Heartbeat) -->
+                <svg class="pulse-line" viewBox="0 0 300 40" fill="none" stroke="currentColor" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path
+                        d="M 0,20 L 110,20 L 113,17 L 116,20 L 118,23 L 121,20 L 124,2 L 128,38 L 132,20 L 136,15 L 141,20 L 165,20 L 168,17 L 171,20 L 173,23 L 176,20 L 179,2 L 183,38 L 187,20 L 191,15 L 196,20 L 300,20"
+                        stroke-width="1.5"></path>
+                </svg>
+
+                <div class="front-tagline">Movement is Medicine</div>
+
+                <!-- Doctor Details centered (matching back of visiting card) -->
+                <div class="center-person-info">
+                    <div class="doctor-name">Dr. Swetha R.M (PT)</div>
+                    <div class="doctor-title">Founder & Physiotherapist</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Center Patient Info Card Box -->
+        <div class="patient-box">
+            <div class="patient-box-title">Patient Case File</div>
+
+            <div class="patient-grid">
+                <!-- Name of Patient -->
+                <div class="field-group full-width">
+                    <span class="field-label">Name of Patient:</span>
+                    <span class="field-line"></span>
+                </div>
+
+                <!-- Case File No & Date -->
+                <div class="field-group">
+                    <span class="field-label">Case File No:</span>
+                    <span class="field-line"></span>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Date:</span>
+                    <span class="field-line"></span>
+                </div>
+
+                <!-- Age/Gender & Contact No -->
+                <div class="field-group">
+                    <span class="field-label">Age / Gender:</span>
+                    <span class="field-line"></span>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Contact No:</span>
+                    <span class="field-line"></span>
+                </div>
+
+                <!-- Patient Emergency No & Relation to Patient -->
+                <div class="field-group">
+                    <span class="field-label">Emergency No:</span>
+                    <span class="field-line"></span>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Relation:</span>
+                    <span class="field-line"></span>
+                </div>
+
+                <!-- Consulting Therapist (Pre-printed) -->
+                <div class="field-group full-width">
+                    <span class="field-label">Attending Therapist:</span>
+                    <span class="field-value-static"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Footer (stacked URL, Kannada watermarks, and English translation matching brand card) -->
+        <div class="front-footer">
+            <div class="front-bottom">www.physiyoga.in</div>
+            <div class="kannada-text">ಫಿಸಿಯೋಗ</div>
+            <div class="kannada-subtitle">ಭೌತಿಕ ಚಿಕಿತ್ಸೆ ಮತ್ತು ಯೋಗ</div>
+            <div class="kannada-english-subtitle">Physiotherapy and Yoga</div>
+        </div>
+
+    </div>
+
+    <!-- Back Cover Container -->
+    <div class="folder-cover folder-back">
+
+        <div class="kannada-watermark">ಫಿಸಿಯೋಗ</div>
+
+        <!-- Top Brand Group (Matching front cover layout) -->
+        <div class="back-header">
+            <div class="center-brand">
+                <div class="yellow-line"></div>
+                <div class="brand-text">PHYSI<span>YOGA</span></div>
+                <div class="yellow-line"></div>
+            </div>
+            <div class="front-subtitle">Restore &bull; Rebuild &bull; Realign</div>
+        </div>
+
+        <!-- Main Body Grid: About & Services side-by-side -->
+        <div class="back-content">
+            <!-- About Section (Left) -->
+            <div class="about-container">
+                <h2 class="section-title">About Physiyoga</h2>
+                <h3 class="section-subtitle">Where Clinical Expertise Meets Holistic Balance</h3>
+                <p>
+                    Physiyoga is a musculoskeletal physiotherapy practice delivering evidence-based rehabilitation
+                    through detailed biomechanical assessment, movement system diagnosis, and graded therapeutic
+                    exercise. Physiotherapy remains the primary intervention for recovery, functional restoration,
+                    and recurrence prevention.
+                </p>
+                <p>
+                    Principles from traditional yoga are applied selectively as structured, low-load movement
+                    strategies for maintenance and movement awareness, not as standalone treatment. Rehabilitation
+                    integrates cognitive behavioural principles within physiotherapy scope, including pain
+                    education, graded exposure, and addressing fear-avoidance behaviours, to improve adherence and
+                    outcomes.
+                </p>
+                <p>
+                    Programs are reassessed and individualised at each session, recognising daily variations in
+                    tissue tolerance and movement capacity, with a focus on restoring efficient biomechanics and
+                    supporting safe return to activity or sport.
+                </p>
+            </div>
+
+            <!-- Services Section (Right) -->
+            <div class="services-container">
+                <h2 class="section-title">Our Services</h2>
+                <div class="services-list-grid">
+                    <div class="service-item">
+                        <strong>Musculoskeletal Physiotherapy</strong>
+                        <p>Focusing on joint pain, muscle strain, tendonitis, and biomechanical issues.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Movement Assessment & Biomechanical Analysis</strong>
+                        <p>Identifying compensation patterns and movement system faults.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Antenatal & Postnatal Physiotherapy</strong>
+                        <p>Supporting safe movement, physical well-being, and complete recovery during and after
+                            pregnancy.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Motor Control & Joint Stability Training</strong>
+                        <p>Correcting movement control and joint alignment under active loading.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Post-Injury & Post-Surgical Rehab</strong>
+                        <p>Evidence-based recovery guided by tissue healing timelines.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Return to Sport & Activity Conditioning</strong>
+                        <p>Bridging rehabilitation and performance with loaded conditioning.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Therapeutic Movement Integration</strong>
+                        <p>Yoga movement principles selectively applied as clinical tools.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Breathing Mechanics & Postural Re-education</strong>
+                        <p>Improving core stability, spinal loading, and breathing pattern efficiency.</p>
+                    </div>
+                    <div class="service-item">
+                        <strong>Workplace Ergonomics & Corporate Programs</strong>
+                        <p>Custom workplace evaluations to reduce strain and occupational injury.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Section (Matching visiting card back footer) -->
+        <div class="back-footer-container">
+            <div class="footer-split">
+                <!-- Left: Contacts -->
+                <div class="footer-contacts">
+                    <!-- Phone -->
+                    <div class="footer-contact-row">
+                        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                            </path>
+                        </svg>
+                        <span class="footer-contact-text font-bold">+91 9606044310</span>
+                    </div>
+                    <!-- Email -->
+                    <div class="footer-contact-row">
+                        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        <span class="footer-contact-text">dr.swetha@physiyoga.in</span>
+                    </div>
+                    <!-- Website -->
+                    <div class="footer-contact-row">
+                        <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path
+                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                            </path>
+                        </svg>
+                        <span class="footer-contact-text">www.physiyoga.in</span>
+                    </div>
+                </div>
+
+                <!-- Right: Scan Location QR Code -->
+                <div class="footer-qr-code">
+                    <div class="qr-code-box">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https%3A%2F%2Fmaps.app.goo.gl%2FMJdLWusp6R1fvdPx8"
+                            alt="Location QR Code">
+                    </div>
+                    <div class="qr-code-text">Scan Location</div>
+                </div>
+            </div>
+
+            <!-- Bottom: Address (Full width row) -->
+            <div class="footer-address">
+                <svg class="footer-icon address-pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <div class="address-paragraph">
+                    No 9, First Floor, Bharath Housing Society, 60 Feet Road, Thurahalli Rd, near Gubbalala Lake,
+                    Bengaluru, Karnataka 560061
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

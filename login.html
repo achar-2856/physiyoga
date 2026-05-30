@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Login | Physiyoga</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <script>
+        // Redirect to documents if already logged in
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
+            window.location.replace('documents.html');
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--secondary) 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative background shapes */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 1;
+            opacity: 0.15;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            top: -50px;
+            left: -50px;
+        }
+
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent);
+            bottom: -100px;
+            right: -100px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            z-index: 10;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo h1 {
+            color: var(--white);
+            font-size: 2.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .login-logo span {
+            color: var(--primary);
+        }
+
+        .login-logo p {
+            color: var(--gray);
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            color: var(--white);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(255, 149, 0, 0.15);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.875rem;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px var(--primary);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-to-home {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .back-to-home a {
+            color: var(--gray);
+            font-size: 0.875rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-to-home a:hover {
+            color: var(--white);
+        }
+
+        /* Spinner for loading state */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--white);
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Decorative background elements -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <a href="index.html">
+                    <h1>Physi<span>yoga</span></h1>
+                </a>
+                <p>Owner Dashboard Portal</p>
+            </div>
+
+            <!-- Error Message Box -->
+            <div class="error-message" id="error-box">
+                <span>⚠️</span>
+                <span id="error-text">Invalid credentials. Please try again.</span>
+            </div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="username" class="form-input" placeholder="Enter username"
+                            autocomplete="username" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" class="form-input" placeholder="••••••••"
+                            autocomplete="current-password" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btn-submit">
+                    <span class="spinner" id="spinner"></span>
+                    <span id="btn-text">Sign In</span>
+                </button>
+            </form>
+
+            <div class="back-to-home">
+                <a href="index.html">← Back to Homepage</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SHA-256 Hashing function using Web Crypto API
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const errorBox = document.getElementById('error-box');
+        const errorText = document.getElementById('error-text');
+        const submitBtn = document.getElementById('btn-submit');
+        const submitText = document.getElementById('btn-text');
+        const spinner = document.getElementById('spinner');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Hide previous errors
+            errorBox.style.display = 'none';
+
+            // Show loading spinner
+            spinner.style.display = 'block';
+            submitText.textContent = 'Verifying...';
+            submitBtn.disabled = true;
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            try {
+                // Compute hashes
+                const userHash = await sha256(username);
+                const passHash = await sha256(password);
+
+                // Admin hashes:
+                // username: admin -> 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+                // password: Coffee@2299 -> e3281e6c3ec62b14909f3e6c38679837f62dc24d65cd1ba9b1e5ea2a192d65cc
+                if (userHash === '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' &&
+                    passHash === 'e3281e6c3ec62b14909f3e6c38679837f62dc24d65cd1ba9b1e5ea2a192d65cc') {
+
+                    // Set session flag
+                    sessionStorage.setItem('isLoggedIn', 'true');
+
+                    // Redirect
+                    window.location.replace('documents.html');
+                } else {
+                    // Show error
+                    errorText.textContent = 'Invalid username or password.';
+                    errorBox.style.display = 'flex';
+
+                    // Reset UI
+                    spinner.style.display = 'none';
+                    submitText.textContent = 'Sign In';
+                    submitBtn.disabled = false;
+                }
+            } catch (err) {
+                console.error('Hashing error:', err);
+                errorText.textContent = 'An error occurred. Please try again.';
+                errorBox.style.display = 'flex';
+
+                spinner.style.display = 'none';
+                submitText.textContent = 'Sign In';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

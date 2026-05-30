@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physiyoga Visiting Card - Minimal Grey</title>
+    <!-- Geometric Sans for Logo, Elegant Serif for details -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Cool matte grey from the reference image */
+            --card-bg: #AEB1B0;
+            /* Almost black for text and borders */
+            --text-dark: #121212;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            gap: 2rem;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .card {
+            width: 3.5in;
+            height: 2in;
+            position: relative;
+            box-sizing: border-box;
+            background-color: var(--card-bg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-dark);
+            /* Creating the very subtle thick edge look using box-shadow */
+            box-shadow:
+                -2px 2px 0px #888,
+                -4px 4px 0px #555,
+                0 15px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* --- FRONT SIDE --- */
+        .front {
+            padding: 0;
+        }
+
+        .logo-box {
+            border: 3px solid var(--text-dark);
+            padding: 0.15in 0.25in;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text {
+            font-family: 'Jost', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            /* Relatively small and understated */
+            letter-spacing: 5px;
+            /* Wide tracking */
+            margin-right: -5px;
+            /* Offset the tracking perfectly */
+            color: var(--text-dark);
+        }
+
+        /* --- BACK SIDE --- */
+        .back {
+            padding: 0.25in;
+        }
+
+        .back-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 0.08in;
+        }
+
+        .name {
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .title {
+            font-weight: 400;
+            font-size: 0.55rem;
+            font-style: italic;
+            margin-bottom: 0.05in;
+            letter-spacing: 0.5px;
+        }
+
+        .divider {
+            width: 15px;
+            height: 1px;
+            background-color: var(--text-dark);
+            margin: 0.05in 0;
+        }
+
+        .contact-text {
+            font-weight: 400;
+            font-size: 0.45rem;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            opacity: 0.85;
+        }
+
+        .contact-group {
+            margin-bottom: 0.05in;
+        }
+
+        .spacer {
+            height: 0.08in;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                gap: 0;
+            }
+
+            .card-container {
+                gap: 0;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: 0.5px solid #ccc;
+                page-break-after: always;
+                background-color: #AEB1B0 !important;
+            }
+
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="no-print" style="margin-bottom: 2rem; text-align: center; font-family: 'Jost', sans-serif;">
+        <h1 style="margin: 0 0 10px 0; font-size: 1.5rem; color: #333;">Minimalist Grey Card Design</h1>
+        <p style="margin: 0; color: #666; font-size: 0.9rem;">Press <strong>Ctrl + P</strong> to print or save as PDF.
+        </p>
+    </div>
+
+    <div class="card-container">
+
+        <!-- Front Side -->
+        <div class="card front">
+            <div class="logo-box">
+                <div class="logo-text">PHYSIYOGA</div>
+            </div>
+        </div>
+
+        <!-- Back Side -->
+        <div class="card back">
+            <div class="back-content">
+                <div class="name">Dr. Swetha R.M (PT)</div>
+                <div class="title">Physiotherapist & Founder</div>
+
+                <div class="divider"></div>
+
+                <div class="contact-group contact-text">
+                    <div>Mobile: +91 960 604 4310</div>
+                    <div>Email: dr.swetha@physiyoga.in</div>
+                </div>
+
+                <div class="spacer"></div>
+
+                <div class="contact-text">
+                    <div>www.physiyoga.in</div>
+                    <div>Movement leads. Integration follows.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

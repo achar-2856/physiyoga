@@ -1,0 +1,21 @@
+{
+  "name": "Physiyoga",
+  "short_name": "Physiyoga",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#FF9500",
+  "description": "Expert physiotherapy combined with therapeutic yoga by Dr. Swetha R.M",
+  "icons": [
+    {
+      "src": "images/logo_icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "images/logo_icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

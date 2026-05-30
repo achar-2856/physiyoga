@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Documents Explorer | Physiyoga</title>
+    
+    <!-- Blocking authentication check in head to prevent content flashing -->
+    <script>
+        if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+            window.location.replace('login.html');
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* Custom styles for the Folder Explorer */
+        .portal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .portal-title h1 {
+            color: var(--secondary);
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .portal-title p {
+            color: var(--gray);
+            font-size: 1.05rem;
+        }
+
+        .btn-logout {
+            background-color: transparent;
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: #ef4444;
+            color: var(--white);
+            border-color: #ef4444;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Folder Grid View */
+        .folder-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .folder-card {
+            background: var(--white);
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.75rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+        }
+
+        .folder-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .folder-card.active::before,
+        .folder-card:hover::before {
+            opacity: 1;
+        }
+
+        .folder-card.active {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+            background: #fffdf9;
+        }
+
+        .folder-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            border-color: #cbd5e1;
+        }
+
+        .folder-icon-wrapper {
+            margin-bottom: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .folder-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .folder-card:hover .folder-icon {
+            transform: scale(1.08);
+        }
+
+        .file-count-badge {
+            background: #fff7ed;
+            color: #c2410c;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            border: 1px solid #ffedd5;
+        }
+
+        .folder-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .folder-desc {
+            color: var(--gray);
+            font-size: 0.875rem;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+
+        /* Files Section */
+        .files-section {
+            background: var(--white);
+            border: 1px solid #e2e8f0;
+            border-radius: 1.25rem;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 4rem;
+            display: none;
+            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .files-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.75rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .files-header h3 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .files-header .folder-indicator {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        .files-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem;
+            border: 1px solid #f1f5f9;
+            background: #fafbfd;
+            border-radius: 0.75rem;
+            transition: all 0.25s ease;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+        }
+
+        .file-item:hover {
+            border-color: #cbd5e1;
+            background: var(--white);
+            transform: translateX(4px);
+            box-shadow: var(--shadow);
+        }
+
+        .file-info-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .file-type-icon {
+            font-size: 2rem;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            color: var(--gray);
+            border-radius: 0.5rem;
+        }
+
+        .file-details h4 {
+            font-size: 1.05rem;
+            color: var(--secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .file-details p {
+            color: var(--gray);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-group {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .file-badge {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            background: #f1f5f9;
+            color: var(--gray);
+        }
+
+        .file-badge.badge-gold {
+            background: #fff7ed;
+            color: #b45309;
+            border: 1px solid #ffedd5;
+        }
+
+        .file-badge.badge-teal {
+            background: #f0fdfa;
+            color: #0f766e;
+            border: 1px solid #ccfbf1;
+        }
+
+        /* Action Buttons */
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-action-view {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .btn-action-view:hover {
+            background: #1d4ed8;
+            color: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .btn-action-download {
+            background: #f0fdf4;
+            color: #15803d;
+        }
+
+        .btn-action-download:hover {
+            background: #15803d;
+            color: var(--white);
+            transform: translateY(-1px);
+        }
+
+        .btn-action-print {
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .btn-action-print:hover {
+            background: #c2410c;
+            color: var(--white);
+            transform: translateY(-1px);
+        }
+
+        /* No active selection state */
+        .no-selection {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--white);
+            border: 2px dashed #cbd5e1;
+            border-radius: 1.25rem;
+            color: var(--gray);
+            margin-bottom: 4rem;
+        }
+
+        .no-selection-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-text">
+                    <span class="logo-title" style="color: var(--secondary);">Physi<span style="color: var(--primary);">yoga</span></span>
+                    <span class="logo-subtitle" style="color: var(--secondary);">Movement is <span style="color: var(--primary);">Medicine</span></span>
+                </div>
+            </a>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="blog.html" class="nav-link">Blog</a></li>
+                <li><a href="contact.html" class="btn btn-primary">Book Appointment</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Portal Content -->
+    <section class="section" style="padding-top: 140px; background-color: var(--light); min-height: 80vh;">
+        <div class="container">
+            
+            <div class="portal-header">
+                <div class="portal-title">
+                    <h1>Clinic Document Portal</h1>
+                    <p>Welcome back, Dr. Swetha. Select a folder below to manage clinic assets.</p>
+                </div>
+                <button class="btn-logout" id="portal-logout-btn">
+                    <span>🚪</span> Log Out
+                </button>
+            </div>
+
+            <!-- Folders Grid -->
+            <div class="folder-grid">
+                <!-- Folder 1 -->
+                <div class="folder-card" data-folder="brochures">
+                    <div class="folder-icon-wrapper">
+                        <span class="folder-icon">📂</span>
+                        <span class="file-count-badge" id="badge-brochures">2 files</span>
+                    </div>
+                    <h3 class="folder-title">Clinical Brochures</h3>
+                    <p class="folder-desc">Doctors referral brochure booklets and services compilation cards.</p>
+                </div>
+
+                <!-- Folder 2 -->
+                <div class="folder-card" data-folder="visiting">
+                    <div class="folder-icon-wrapper">
+                        <span class="folder-icon">📂</span>
+                        <span class="file-count-badge" id="badge-visiting">5 files</span>
+                    </div>
+                    <h3 class="folder-title">Visiting Cards</h3>
+                    <p class="folder-desc">Double-sided visiting cards, crop-marked print files, and minimalist variations.</p>
+                </div>
+
+                <!-- Folder 3 -->
+                <div class="folder-card" data-folder="flyers">
+                    <div class="folder-icon-wrapper">
+                        <span class="folder-icon">📂</span>
+                        <span class="file-count-badge" id="badge-flyers">3 files</span>
+                    </div>
+                    <h3 class="folder-title">Flyers & Cards</h3>
+                    <p class="folder-desc">Digital marketing flyers, clinic introduction cards, and patient history file templates.</p>
+                </div>
+
+                <!-- Folder 4 -->
+                <div class="folder-card" data-folder="cv-logos">
+                    <div class="folder-icon-wrapper">
+                        <span class="folder-icon">📂</span>
+                        <span class="file-count-badge" id="badge-cv-logos">3 files</span>
+                    </div>
+                    <h3 class="folder-title">Profiles & Logos</h3>
+                    <p class="folder-desc">Doctor CV clinical profile, SVG vector medical logo templates, and staff resumes.</p>
+                </div>
+            </div>
+
+            <!-- Files Display Area -->
+            <div class="no-selection" id="no-selection-view">
+                <div class="no-selection-icon">📂</div>
+                <h3>No Folder Selected</h3>
+                <p>Click on one of the folders above to expand and view its contents.</p>
+            </div>
+
+            <div class="files-section" id="files-display-view">
+                <div class="files-header">
+                    <span class="folder-indicator">📂</span>
+                    <h3 id="current-folder-title">Folder Name</h3>
+                </div>
+                <div class="files-list" id="files-list-container">
+                    <!-- Dynamic Files Injected Here -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <a href="index.html" class="footer-logo">Physi<span style="color: var(--primary);">yoga</span></a>
+                    <p style="color: var(--gray);">Movement is medicine</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;">Contact Us</h4>
+                    <ul class="footer-links">
+                        <li>📞 9606044310</li>
+                        <li>✉️ dr.swetha@physiyoga.in</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 Physiyoga. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Folder contents database
+        const documentDatabase = {
+            brochures: {
+                title: "Clinical Brochures & Referrals",
+                files: [
+                    {
+                        name: "Doctors Referral Brochure",
+                        filename: "doctors_brochure.html",
+                        desc: "Visual clinical referral brochure for medical practitioners detailing evidence-based treatments and timeline.",
+                        badges: [{text: "Print-ready", class: "badge-gold"}, {text: "2-Page A4", class: "badge-teal"}]
+                    },
+                    {
+                        name: "Service Brochure Cards",
+                        filename: "service_brochure_cards.html",
+                        desc: "Musculoskeletal and spinal therapy service overview cards in brochure presentation mode.",
+                        badges: [{text: "Printable", class: ""}, {text: "Card Layout", class: "badge-teal"}]
+                    }
+                ]
+            },
+            visiting: {
+                title: "Visiting Cards Collection",
+                files: [
+                    {
+                        name: "Standard Visiting Card",
+                        filename: "visiting_card.html",
+                        desc: "Standard double-sided clinic visiting card featuring doctor credentials, contact info, and logos.",
+                        badges: [{text: "Double-sided", class: "badge-teal"}, {text: "Gold Theme", class: "badge-gold"}]
+                    },
+                    {
+                        name: "Visiting Card with Crop Marks",
+                        filename: "visiting_card_cut.html",
+                        desc: "Print-ready double-sided visiting card with bleed borders and crop lines for professional printers.",
+                        badges: [{text: "Bleed/Crop Marks", class: "badge-gold"}]
+                    },
+                    {
+                        name: "Minimalist Visiting Card",
+                        filename: "visiting_card_minimal.html",
+                        desc: "Clean, text-focused minimalist visiting card focusing on typographic hierarchy and white space.",
+                        badges: [{text: "Minimalist", class: ""}]
+                    },
+                    {
+                        name: "Visiting Card v1",
+                        filename: "visiting_card_v1.html",
+                        desc: "Clinic visiting card option 1 containing complete address details.",
+                        badges: [{text: "Variant", class: ""}]
+                    },
+                    {
+                        name: "Front & Back v1 Card",
+                        filename: "visiting_card_fv1.html",
+                        desc: "Clinic visiting card variant featuring high-contrast text layouts.",
+                        badges: [{text: "Variant v1", class: ""}]
+                    }
+                ]
+            },
+            flyers: {
+                title: "Marketing Flyers & Patient Record Cards",
+                files: [
+                    {
+                        name: "Digital Clinic Flyer",
+                        filename: "digital_flyer.html",
+                        desc: "Marketing flyer layout displaying treatment philosophies, WhatsApp booking details, and QR codes.",
+                        badges: [{text: "Digital Flyer", class: "badge-teal"}, {text: "Responsive", class: ""}]
+                    },
+                    {
+                        name: "Patient History File Card",
+                        filename: "patient_file_card.html",
+                        desc: "Functional record sheet to keep inside patient folders, tracking clinical diagnostics, history, and notes.",
+                        badges: [{text: "Print-ready", class: "badge-gold"}, {text: "Patient Record", class: "badge-teal"}]
+                    },
+                    {
+                        name: "Clinic Intro Card",
+                        filename: "intro_card.html",
+                        desc: "Short clinic informational intro card displaying core hours and primary booking channels.",
+                        badges: [{text: "Intro Card", class: ""}]
+                    }
+                ]
+            },
+            "cv-logos": {
+                title: "Doctor Profile CV & Logo Assets",
+                files: [
+                    {
+                        name: "Dr. Swetha Clinical CV",
+                        filename: "clinical_cv.html",
+                        desc: "Musculoskeletal therapist professional curriculum vitae showcasing education, clinical experience, and skills.",
+                        badges: [{text: "Printable", class: "badge-gold"}, {text: "Full CV", class: "badge-teal"}]
+                    },
+                    {
+                        name: "Refined Medical Logo",
+                        filename: "clinical_medical_logo.html",
+                        desc: "A display page for the gold and navy Rod of Asclepius vector emblems created for clinic branding.",
+                        badges: [{text: "SVG Logo", class: "badge-teal"}]
+                    },
+                    {
+                        name: "Developer/Staff Resume",
+                        filename: "srinivasa_resume.html",
+                        desc: "Professional curriculum vitae layout containing development experience and technical credentials.",
+                        badges: [{text: "Staff Profile", class: ""}]
+                    }
+                ]
+            }
+        };
+
+        const folderCards = document.querySelectorAll('.folder-card');
+        const noSelectionView = document.getElementById('no-selection-view');
+        const filesDisplayView = document.getElementById('files-display-view');
+        const currentFolderTitle = document.getElementById('current-folder-title');
+        const filesListContainer = document.getElementById('files-list-container');
+        const logoutBtn = document.getElementById('portal-logout-btn');
+
+        // Folder selection behavior
+        folderCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const folderKey = card.getAttribute('data-folder');
+                
+                // Toggle active state on cards
+                folderCards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+
+                // Render folder contents
+                renderFolder(folderKey);
+            });
+        });
+
+        function renderFolder(key) {
+            const folderData = documentDatabase[key];
+            if (!folderData) return;
+
+            // Update title
+            currentFolderTitle.textContent = folderData.title;
+
+            // Clear previous files
+            filesListContainer.innerHTML = '';
+
+            // Inject file items
+            folderData.files.forEach(file => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+
+                // Construct badges HTML
+                let badgesHtml = '';
+                file.badges.forEach(b => {
+                    badgesHtml += `<span class="file-badge ${b.class}">${b.text}</span>`;
+                });
+
+                item.innerHTML = `
+                    <div class="file-info-group">
+                        <div class="file-type-icon">📄</div>
+                        <div class="file-details">
+                            <h4>${file.name}</h4>
+                            <p>${file.desc}</p>
+                            <div class="badge-group">${badgesHtml}</div>
+                        </div>
+                    </div>
+                    <div class="file-actions">
+                        <a href="${file.filename}" target="_blank" class="btn-action btn-action-view">👁️ View</a>
+                        <a href="${file.filename}" download="${file.filename}" class="btn-action btn-action-download">📥 Download</a>
+                        <button onclick="printFile('${file.filename}')" class="btn-action btn-action-print">🖨️ Print / PDF</button>
+                    </div>
+                `;
+                filesListContainer.appendChild(item);
+            });
+
+            // Toggle views
+            noSelectionView.style.display = 'none';
+            filesDisplayView.style.display = 'block';
+        }
+
+        // Print trigger handler
+        function printFile(url) {
+            // Open target page in new tab
+            const printWindow = window.open(url, '_blank');
+            if (printWindow) {
+                const runPrint = () => {
+                    setTimeout(() => {
+                        printWindow.print();
+                    }, 500);
+                };
+
+                if (printWindow.document.readyState === 'complete') {
+                    runPrint();
+                } else {
+                    printWindow.addEventListener('load', runPrint);
+                }
+            }
+        }
+
+        // Logout behavior
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('isLoggedIn');
+            window.location.replace('index.html');
+        });
+    </script>
+</body>
+
+</html>

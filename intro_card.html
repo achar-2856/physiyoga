@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Swetha R. M. - Professional Introduction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Bandipura';
+            src: url('fonts/ATSBandipura-Bold.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        :root {
+            --primary: #FF9500;
+            --secondary: #272a31;
+            --bg-dark: #1e2025;
+            --text-light: #e2e8f0;
+            --text-muted: #94a3b8;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #cbd5e1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .intro-card {
+            background-color: var(--secondary);
+            width: 148mm;
+            height: 210mm; /* A5 Height */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+            color: var(--white);
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* --- Background Elements --- */
+        .kannada-watermark {
+            font-family: 'Bandipura', sans-serif;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 8rem;
+            color: rgba(255, 255, 255, 0.025);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .gradient-glow {
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,149,0,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        /* --- Header --- */
+        .header {
+            position: relative;
+            z-index: 1;
+            padding: 40px 40px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        .tagline {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-light);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .tagline span {
+            color: var(--primary);
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            position: relative;
+            z-index: 1;
+            padding: 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-title h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--white);
+            letter-spacing: 0.5px;
+        }
+
+        .profile-title .badge {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 6px 12px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            margin-bottom: 25px;
+        }
+
+        .bio-text {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .highlight-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .highlight-box p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .expertise-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--white);
+            letter-spacing: 0.5px;
+        }
+
+        .expertise-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 15px;
+        }
+
+        .expertise-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .expertise-item .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: var(--bg-dark);
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid var(--primary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .contact-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .contact-row svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--primary);
+        }
+
+        /* --- Print Button & Output --- */
+        .btn-print {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255,149,0,0.3);
+            z-index: 1000;
+        }
+
+        @page {
+            size: 148mm 210mm; /* Force exact A5 size to prevent 2 pages */
+            margin: 0;
+        }
+
+        @media print {
+            body { background: white; padding: 0; align-items: flex-start; }
+            .intro-card { box-shadow: none; margin: 0; border-radius: 0; }
+            .btn-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="btn-print" onclick="window.print()">Download / Print Bio</button>
+
+    <div class="intro-card">
+        
+        <div class="gradient-glow"></div>
+        <div class="kannada-watermark">ಫಿಸಿಯೋಗ</div>
+
+        <header class="header">
+            <div class="logo-text">Physi<span>yoga</span></div>
+            <div class="tagline">Movement is <span>Medicine</span></div>
+        </header>
+
+        <div class="main-content">
+            <div class="profile-title">
+                <h1>Dr. Swetha R. M. <span style="font-weight: 300; font-size: 1.5rem; color: var(--text-muted);">(PT)</span></h1>
+                <div class="badge">Founder & Lead Physiotherapist</div>
+            </div>
+
+            <p class="bio-text">
+                Bringing clinical precision to movement recovery. With a Master's degree (MPT) in Musculoskeletal Sciences, I specialize in bridging the gap between acute hospital care and long-term functional performance.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    Through the <strong style="color: var(--white);">Physiyoga Method</strong>, I integrate evidence-based biomechanical correction with graded functional loading—ensuring patients transition from ward settings to full independence with speed and safety.
+                </p>
+            </div>
+
+            <div class="expertise-title">Clinical Expertise</div>
+            <div class="expertise-grid">
+                <div class="expertise-item"><div class="dot"></div> ICU & Critical Care</div>
+                <div class="expertise-item"><div class="dot"></div> Chest Physiotherapy</div>
+                <div class="expertise-item"><div class="dot"></div> Post-Operative Rehab</div>
+                <div class="expertise-item"><div class="dot"></div> Orthopaedic Recovery</div>
+                <div class="expertise-item"><div class="dot"></div> Dry Needling & Taping</div>
+                <div class="expertise-item"><div class="dot"></div> Early Mobilization</div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="contact-info">
+                <div class="contact-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    www.physiyoga.in
+                </div>
+                <div class="contact-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    +91 9606044310
+                </div>
+            </div>
+            <div class="contact-info">
+                <div class="contact-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    dr.swetha@physiyoga.in
+                </div>
+                <div class="contact-row">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Bengaluru, India 560056
+                </div>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>

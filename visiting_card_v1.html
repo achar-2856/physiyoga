@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physiyoga Visiting Card</title>
+    <!-- Outfit and Inter fonts map directly to the website branding -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Bandipura';
+            src: url('fonts/ATSBandipura-Bold.woff2') format('woff2');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        :root {
+            --primary: #FF9500;
+            /* Yellow/Orange from website */
+            --black: #161616;
+            /* Deep matte black for background */
+            --white: #ffffff;
+            --grey: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            gap: 2rem;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .card {
+            width: 3.5in;
+            height: 2in;
+            position: relative;
+            box-sizing: border-box;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            background-color: var(--black);
+            overflow: hidden;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            display: flex;
+            flex-direction: column;
+            /* Subtle horizontal stripe texture like the reference */
+            background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 1px, transparent 1px, transparent 4px);
+        }
+
+        /* --- FRONT SIDE --- */
+        .front {
+            padding: 0.3in;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-brand {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 15px;
+        }
+
+        .brand-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .yellow-line {
+            flex: 1;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .brand-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: var(--white);
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-text span {
+            color: var(--primary);
+        }
+
+        .front-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.5rem;
+            color: var(--grey);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .front-bottom {
+            position: absolute;
+            bottom: 0.25in;
+            width: 100%;
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.65rem;
+            color: var(--grey);
+            letter-spacing: 1px;
+        }
+
+        /* --- BACK SIDE --- */
+        .back {
+            padding: 0.35in 0.4in;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .back .center-brand {
+            margin-bottom: 0.15in;
+            gap: 12px;
+        }
+
+        .tagline-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tagline {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.65rem;
+            color: var(--primary);
+            /* Highlighted yellow as requested */
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .back-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.4rem;
+            color: var(--white);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            margin-bottom: 0.1in;
+        }
+
+        .details-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.1in;
+            width: 100%;
+            z-index: 2;
+        }
+
+        .person-info {
+            text-align: center;
+        }
+
+        .name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--white);
+            margin-bottom: 3px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            font-size: 0.45rem;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.52rem;
+            color: var(--grey);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-icon {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.65rem;
+        }
+
+        .kannada-text {
+            font-family: 'Bandipura', sans-serif;
+            position: absolute;
+            bottom: -0.1in;
+            /* Bleed slightly off the bottom edge for a stamped look */
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.04);
+            /* Ingrained/watermark effect */
+            user-select: none;
+            z-index: 1;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                gap: 0;
+            }
+
+            .card-container {
+                gap: 0;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #333;
+                page-break-after: always;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            /* Exact hex overrides to prevent browser print variations */
+            .card {
+                background-color: #161616 !important;
+            }
+
+            .yellow-line {
+                background-color: #FF9500 !important;
+            }
+
+            .brand-text span {
+                color: #FF9500 !important;
+            }
+
+            .title {
+                color: #FF9500 !important;
+            }
+
+            .contact-icon {
+                color: #FF9500 !important;
+            }
+
+            .tagline {
+                color: #FF9500 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="no-print" style="margin-bottom: 2rem; text-align: center; font-family: 'Inter', sans-serif;">
+        <h1 style="margin: 0 0 10px 0; font-size: 1.5rem; color: #333;">Visiting Card Design</h1>
+        <p style="margin: 0; color: #666; font-size: 0.9rem;">Press <strong>Ctrl + P</strong> to print or save as PDF.
+        </p>
+    </div>
+
+    <div class="card-container">
+
+        <!-- Front Side -->
+        <div class="card front">
+            <!-- Brand centered with horizontal yellow lines -->
+            <div class="center-brand">
+                <div class="yellow-line"></div>
+                <div class="brand-group">
+                    <div class="brand-text">PHYSI<span>YOGA</span></div>
+                    <div class="front-subtitle">Movement is Medicine</div>
+                </div>
+                <div class="yellow-line"></div>
+            </div>
+
+            <!-- Website at bottom -->
+            <div class="front-bottom">
+                www.physiyoga.in
+            </div>
+        </div>
+
+        <!-- Back Side -->
+        <div class="card back">
+            <!-- Tagline between lines -->
+            <div class="center-brand">
+                <div class="yellow-line"></div>
+                <div class="tagline-group">
+                    <div class="tagline">Breath · Movement · Mind</div>
+                </div>
+                <div class="yellow-line"></div>
+            </div>
+            <div class="back-subtitle">Movement leads. Integration follows.</div>
+
+            <div class="details-wrapper">
+                <!-- Person Info -->
+                <div class="person-info">
+                    <div class="name">Dr. Swetha R.M (PT)</div>
+                    <div class="title">Musculoskeletal Physiotherapist & Founder</div>
+                </div>
+
+                <!-- Contact Info centered -->
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="contact-icon">P:</span> +91 9606044310
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">E:</span> dr.swetha@physiyoga.in
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ingrained Kannada Watermark -->
+            <div class="kannada-text">ಫಿಸಿಯೋಗ</div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

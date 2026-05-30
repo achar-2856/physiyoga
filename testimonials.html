@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testimonials | Physiyoga</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .review-grid {
+            column-count: 2;
+            column-gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .review-grid {
+                column-count: 1;
+            }
+        }
+
+        .review-item {
+            break-inside: avoid;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo_icon.png" alt="Physiyoga Icon" style="display: none;">
+                <div class="logo-text">
+                    <span class="logo-title" style="color: var(--secondary);">Physi<span
+                            style="color: var(--primary);">yoga</span></span>
+                    <span class="logo-subtitle" style="color: var(--secondary);">Movement is <span
+                            style="color: var(--primary);">Medicine</span></span>
+                </div>
+            </a>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="blog.html" class="nav-link">Blog</a></li>
+                <li><a href="testimonials.html" class="nav-link" style="color: var(--primary);">Testimonials</a></li>
+                <li><a href="contact.html" class="btn btn-primary">Book Appointment</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="section" style="padding-top: 140px; background: var(--light);">
+        <div class="container text-center animate-on-scroll">
+            <h1>Patient Success Stories</h1>
+            <p>Read what our happy patients have to say about their recovery journey.</p>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container review-grid">
+            <div class="testimonial-card review-item animate-on-scroll">
+                <div class="stars">★★★★★</div>
+                <p>"I had chronic back pain for 5 years. Two months of Physiyoga with Dr. Swetha and I am pain-free. The
+                    yoga integration is genius."</p>
+                <p style="font-weight: 700; margin-top: 1rem;">- Rajesh Kumar</p>
+            </div>
+
+            <div class="testimonial-card review-item animate-on-scroll">
+                <div class="stars">★★★★★</div>
+                <p>"Dr. Swetha was incredibly patient with my mother's post-surgery rehab. She is walking confidently
+                    now. Best physiotherapist in the city!"</p>
+                <p style="font-weight: 700; margin-top: 1rem;">- Priya Sharma</p>
+            </div>
+
+            <div class="testimonial-card review-item animate-on-scroll">
+                <div class="stars">★★★★★</div>
+                <p>"I injured my shoulder playing badminton. The diagnosis was spot on and the rehab exercises were easy
+                    to follow at home. Highly recommend."</p>
+                <p style="font-weight: 700; margin-top: 1rem;">- Arun V.</p>
+            </div>
+
+            <div class="testimonial-card review-item animate-on-scroll">
+                <div class="stars">★★★★★</div>
+                <p>"What I love about Physiyoga is the atmosphere. It's not like a sterile hospital. It relaxes you
+                    instantly."</p>
+                <p style="font-weight: 700; margin-top: 1rem;">- Sarah Jenkins</p>
+            </div>
+
+            <div class="testimonial-card review-item animate-on-scroll">
+                <div class="stars">★★★★★</div>
+                <p>"Professional, punctual, and effective. The combination of manual therapy and yoga stretches works
+                    wonders."</p>
+                <p style="font-weight: 700; margin-top: 1rem;">- Ahmed Khan</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section" style="background: var(--primary); color: white; text-align: center;">
+        <div class="container animate-on-scroll">
+            <h2>Ready to start your recovery?</h2>
+            <p style="margin-bottom: 2rem;">Book a consultation today and feel the difference.</p>
+            <a href="contact.html" class="btn btn-secondary">Book Now</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <a href="index.html" class="footer-logo">Physi<span style="color: var(--primary);">yoga</span></a>
+                    <p style="color: var(--gray);">Movement is medicine</p>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;">Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 1rem;">Contact Us</h4>
+                    <ul class="footer-links">
+                        <li>📞 9606044310</li>
+                        <li>✉️ dr.swetha@physiyoga.in</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2026 Physiyoga. All rights reserved.
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

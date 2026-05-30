@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physiyoga Service Image Generator</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Include html2canvas to allow downloading the HTML as an image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #272a31;
+            --accent: #FF9500;
+            --text-light: #ffffff;
+            --text-gray: #a0a4ab;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1c20;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        p.instruction {
+            color: var(--text-gray);
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        .card-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* The actual "Image" that will be downloaded */
+        .service-card {
+            width: 1080px;
+            /* High-res for Google/Instagram */
+            height: 1080px;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 100% 0%, #3a3e47 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(255, 149, 0, 0.1) 0%, transparent 50%);
+            border-top: 15px solid var(--accent);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 100px;
+            box-sizing: border-box;
+            position: relative;
+            transform-origin: top left;
+            /* Scale it down just for viewing on screen, but it will download at 1080x1080 */
+            transform: scale(0.37);
+            margin-bottom: -680px;
+            /* Adjust for the scale shrink */
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 40px;
+            color: var(--text-gray);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            position: absolute;
+            top: 70px;
+            left: 100px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-name span {
+            color: var(--accent);
+        }
+
+        .service-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--text-light);
+            line-height: 1.15;
+            margin-bottom: 30px;
+            margin-top: 60px;
+            max-width: 880px;
+        }
+
+        .service-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 38px;
+            color: #d1d5db;
+            line-height: 1.5;
+            font-weight: 400;
+            max-width: 880px;
+        }
+
+        .website-footer {
+            position: absolute;
+            bottom: 70px;
+            left: 100px;
+            font-family: 'Inter', sans-serif;
+            font-size: 32px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .accent-line {
+            width: 150px;
+            height: 8px;
+            background-color: var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .download-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            z-index: 10;
+        }
+
+        .download-btn:hover {
+            background-color: #e68600;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Physiyoga Image Generator</h1>
+    <p class="instruction">AI cannot accurately spell long paragraphs of text. To give you <b>perfect</b>, typo-free
+        images with your exact descriptions, I have created this tool! Click "Download Image" under any card below to
+        save it as a high-quality (1080x1080) image for your Google Business Profile.</p>
+
+    <div class="cards-grid" id="cards-container">
+        <!-- Cards will be injected by JS -->
+    </div>
+
+    <script>
+        const services = [
+            {
+                title: "Musculoskeletal Physiotherapy",
+                desc: "This service addresses pain and dysfunction arising from joints, muscles, tendons, and faulty movement mechanics."
+            },
+            {
+                title: "Movement Assessment & Biomechanical Analysis",
+                desc: "This service identifies movement faults and compensations that contribute to pain or repeated injury."
+            },
+            {
+                title: "Antenatal & Postnatal Physiotherapy",
+                desc: "For women during pregnancy and after delivery, supporting safe movement, physical well-being, and complete maternal recovery."
+            },
+            {
+                title: "Motor Control & Joint Stability Training",
+                desc: "Designed for individuals with recurrent pain, joint instability, or inefficient movement control."
+            },
+            {
+                title: "Post-Injury & Post-Surgical Rehabilitation",
+                desc: "Structured rehabilitation following orthopaedic injury or surgery, guided by tissue healing timelines."
+            },
+            {
+                title: "Return to Sport & Activity Conditioning",
+                desc: "This service bridges the gap between rehabilitation and full participation in sport, fitness, or physically demanding activity."
+            },
+            {
+                title: "Therapeutic Movement Integration",
+                desc: "Selected movement principles inspired by Ashtanga Yoga are used as therapeutic movement tools."
+            },
+            {
+                title: "Breathing Mechanics & Postural Re-education",
+                desc: "Breathing and posture influence spinal loading, core stability, and endurance."
+            },
+            {
+                title: "Workplace Ergonomics & Corporate Programs",
+                desc: "Designed to reduce work-related musculoskeletal strain and injury."
+            }
+        ];
+
+        const container = document.getElementById('cards-container');
+
+        services.forEach((srv, index) => {
+            const cardId = 'card-' + index;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'card-container';
+
+            // The HTML structure of the card
+            wrapper.innerHTML = `
+                <div class="service-card" id="${cardId}">
+                    <div class="brand-name">PHYSI<span>YOGA</span></div>
+                    <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                        <div class="accent-line"></div>
+                        <div class="service-title">${srv.title}</div>
+                        <div class="service-description">${srv.desc}</div>
+                    </div>
+                    <div class="website-footer">www.physiyoga.in</div>
+                </div>
+                <button class="download-btn" onclick="downloadCard('${cardId}', 'Physiyoga_Service_${index + 1}.png')">
+                    ⬇️ Download Image
+                </button>
+            `;
+            container.appendChild(wrapper);
+        });
+
+        // Function to convert HTML to Image and download it
+        function downloadCard(cardId, filename) {
+            const cardElement = document.getElementById(cardId);
+
+            // We must temporarily remove the CSS scale transform so html2canvas captures the full 1080x1080 resolution
+            const originalTransform = cardElement.style.transform;
+            cardElement.style.transform = 'scale(1)';
+
+            html2canvas(cardElement, {
+                scale: 1, // Render at 1x scale of the actual 1080px element
+                backgroundColor: null,
+                logging: false
+            }).then(canvas => {
+                // Restore the scale for viewing
+                cardElement.style.transform = originalTransform || '';
+
+                // Trigger download
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+</body>
+
+</html>

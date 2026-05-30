@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physiyoga Clinical Logo Showcase</title>
+    <!-- Outfit Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF9500; /* Accent Yellow/Orange */
+            --bg-dark: #161616; /* Dark theme background */
+            --bg-light: #ffffff; /* Light theme background */
+            --text-dark: #161616;
+            --text-light: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.theme-dark {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+        }
+
+        body.theme-light {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* --- CONTROL PANEL --- */
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            z-index: 10;
+        }
+
+        .btn {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1.5px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        body.theme-dark .btn:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.3);
+        }
+
+        body.theme-light .btn:hover {
+            background: var(--primary);
+            color: var(--bg-light);
+            box-shadow: 0 4px 15px rgba(255, 149, 0, 0.2);
+        }
+
+        .btn-filled {
+            background: var(--primary);
+            color: var(--text-dark);
+        }
+
+        body.theme-dark .btn-filled {
+            color: var(--bg-dark);
+        }
+        body.theme-light .btn-filled {
+            color: var(--bg-light);
+        }
+
+        /* --- LOGO DISPLAY CONTAINER --- */
+        .logo-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 149, 0, 0.15);
+            background: rgba(255, 255, 255, 0.015);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        body.theme-light .logo-card {
+            background: rgba(0, 0, 0, 0.005);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.05);
+            border-color: rgba(255, 149, 0, 0.2);
+        }
+
+        /* --- SVG LOGO --- */
+        .asclepius-logo-svg {
+            width: 180px;
+            height: 180px;
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+
+        .emblem-staff {
+            fill: var(--primary);
+        }
+
+        .emblem-serpent {
+            stroke: var(--primary);
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .emblem-serpent-head {
+            fill: var(--primary);
+        }
+
+        .emblem-gap {
+            stroke: var(--bg-dark);
+            fill: none;
+            transition: stroke 0.3s ease;
+        }
+
+        body.theme-light .emblem-gap {
+            stroke: var(--bg-light);
+        }
+
+        /* Responsive eye color linking to theme background */
+        .emblem-eye {
+            fill: var(--bg-dark);
+            transition: fill 0.3s ease;
+        }
+
+        body.theme-light .emblem-eye {
+            fill: var(--bg-light);
+        }
+
+        /* --- BRAND TEXT --- */
+        .brand-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 2.5rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            transition: color 0.3s ease;
+        }
+
+        body.theme-dark .brand-title {
+            color: var(--text-light);
+        }
+
+        body.theme-light .brand-title {
+            color: var(--text-dark);
+        }
+
+        .brand-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            font-size: 0.88rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            opacity: 0.75;
+            transition: color 0.3s ease;
+        }
+
+        body.theme-dark .brand-subtitle {
+            color: var(--text-light);
+        }
+
+        body.theme-light .brand-subtitle {
+            color: var(--text-dark);
+        }
+    </style>
+</head>
+
+<body class="theme-dark">
+
+    <div class="controls">
+        <button class="btn" id="theme-toggle">Switch Theme</button>
+        <button class="btn btn-filled" id="download-svg">Download SVG</button>
+        <button class="btn" id="copy-svg">Copy SVG Code</button>
+    </div>
+
+    <div class="logo-card">
+        <!-- The High-Fidelity SVG Rod of Asclepius Logo -->
+        <svg class="asclepius-logo-svg" id="logo-vector" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+            <!-- 1. Snake Main Winding Body (drawn first, behind staff) -->
+            <!-- Segment 1: Upper section, thicker (stroke-width: 5.5) -->
+            <path d="M 56.5,22 C 54,22.3 52,23.2 50,23.5 C 41.5,24 37,27 37,30 C 37,33 42,35.5 50,36 C 58,36.5 62.5,39 62.5,42 C 62.5,45 58,47 50,48" class="emblem-serpent" stroke-width="5.5" />
+            <!-- Segment 2: Middle section, medium thickness (stroke-width: 4.8) -->
+            <path d="M 50,48 C 42,49 38.5,51 38.5,54 C 38.5,57 42,59 50,60 C 58,61 61.5,63 61.5,65.5 C 61.5,68 58,70 50,71" class="emblem-serpent" stroke-width="4.8" />
+            <!-- Segment 3: Lower section, thinner (stroke-width: 4.0) -->
+            <path d="M 50,71 C 42,72 39.5,74 39.5,76.5 C 39.5,79 42,80.5 50,81.5 C 57,82.5 59.5,84 59.5,86 C 59.5,88 56,89.5 50,90" class="emblem-serpent" stroke-width="4.0" />
+
+            <!-- 2. Gaps under the staff (crossings 1, 3, 5, 7) -->
+            <line x1="50" y1="21.5" x2="50" y2="25.5" class="emblem-gap" stroke-width="5.0" />
+            <line x1="50" y1="46" x2="50" y2="50" class="emblem-gap" stroke-width="4.5" />
+            <line x1="50" y1="69" x2="50" y2="73" class="emblem-gap" stroke-width="4.0" />
+            <line x1="50" y1="88" x2="50" y2="92" class="emblem-gap" stroke-width="3.5" />
+
+            <!-- 3. Staff (Rod) -->
+            <!-- Ball/Knob on top -->
+            <circle cx="50" cy="13.5" r="3.5" class="emblem-staff" stroke="none" />
+            <!-- Shaft tapering to a needle point -->
+            <polygon points="49.3,17 50.7,17 50.5,84 50,91 49.5,84" class="emblem-staff" stroke="none" />
+
+            <!-- 4. Gaps under front snake segments (crossings 2, 4, 6) -->
+            <path d="M 44,35.7 C 47,36.0 53,36.0 56,36.3" class="emblem-gap" stroke-width="7.5" fill="none" stroke-linecap="round" />
+            <path d="M 44,59.7 C 47,60.0 53,60.0 56,60.3" class="emblem-gap" stroke-width="7.5" fill="none" stroke-linecap="round" />
+            <path d="M 44,81.0 C 47,81.5 53,81.5 56,82.0" class="emblem-gap" stroke-width="7.5" fill="none" stroke-linecap="round" />
+
+            <!-- 5. Front-Snake Segments (Layered on top of staff) -->
+            <path d="M 42,35.5 C 45,35.8 48,36.0 50,36 C 52,36.0 55,36.2 58,36.5" class="emblem-serpent" stroke-width="5.5" />
+            <path d="M 42,59 C 45,59.5 48,59.8 50,60 C 52,60.2 55,60.5 58,61" class="emblem-serpent" stroke-width="4.8" />
+            <path d="M 42,80.5 C 45,81.0 48,81.2 50,81.5 C 52,81.8 55,82.2 57,82.5" class="emblem-serpent" stroke-width="4.0" />
+
+            <!-- 6. Serpent Head (Custom sleek silhouette shape with eye) -->
+            <path d="M 56.5,22 C 57,20.5 59.5,20.2 61.5,20.5 C 63.5,20.8 64,22.2 63.5,23.5 C 63,24.8 61,25.5 59.5,25 C 58,24.5 57,23.5 56.5,22 Z" class="emblem-serpent-head" stroke="none" />
+            <circle cx="60.5" cy="22.2" r="0.7" class="emblem-eye" stroke="none" />
+
+            <!-- 7. Serpent Tail (Custom sleek tapering tail tip) -->
+            <path d="M 50,90 C 44,90.5 42.5,88.5 43,87 C 43.5,85.5 46,84.5 47,85.5 C 47,85.5 45.2,86.2 45,87 C 44.8,87.8 46.2,88.8 49.5,88.2 L 50,88 Z" class="emblem-serpent-head" stroke="none" />
+        </svg>
+
+        <div class="brand-title">Physiyoga</div>
+        <div class="brand-subtitle">Movement is Medicine</div>
+    </div>
+
+    <script>
+        // --- Theme Toggle ---
+        const body = document.body;
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.addEventListener('click', () => {
+            if (body.classList.contains('theme-dark')) {
+                body.classList.remove('theme-dark');
+                body.classList.add('theme-light');
+            } else {
+                body.classList.remove('theme-light');
+                body.classList.add('theme-dark');
+            }
+        });
+
+        // --- Copy SVG Code ---
+        const copyBtn = document.getElementById('copy-svg');
+        const svgEl = document.getElementById('logo-vector');
+        copyBtn.addEventListener('click', () => {
+            const svgCode = svgEl.outerHTML;
+            navigator.clipboard.writeText(svgCode).then(() => {
+                const originalText = copyBtn.innerText;
+                copyBtn.innerText = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.innerText = originalText;
+                }, 1500);
+            });
+        });
+
+        // --- Download SVG ---
+        const downloadBtn = document.getElementById('download-svg');
+        downloadBtn.addEventListener('click', () => {
+            const svgCode = svgEl.outerHTML;
+            const blob = new Blob([svgCode], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'physiyoga_asclepius_logo.svg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+
+</html>

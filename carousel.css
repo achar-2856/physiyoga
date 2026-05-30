@@ -1,0 +1,224 @@
+/* Carousel Styles */
+.carousel-section {
+    position: relative;
+    width: 100%;
+    margin: 2rem 0;
+    overflow: hidden;
+}
+
+.carousel-banner {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background-size: cover;
+    background-position: center;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    z-index: 10;
+}
+
+.carousel-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 100%);
+    z-index: 1;
+}
+
+.slide-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+}
+
+.slide-title {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.slide-subtitle {
+    font-size: 1.5rem;
+    color: var(--secondary);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.slide-subtitle::after {
+    content: '';
+    display: block;
+    height: 2px;
+    flex-grow: 1;
+    background: var(--accent);
+}
+
+.carousel-nav-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+.carousel-nav {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0 1rem;
+}
+
+.nav-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    min-width: 80px;
+}
+
+.nav-circle:hover,
+.nav-circle.active {
+    opacity: 1;
+    transform: translateY(-5px);
+}
+
+.circle-graphic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    background: var(--white);
+    transition: all 0.3s ease;
+}
+
+/* Concentric Circle Effect */
+.circle-graphic::after {
+    content: '';
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--accent);
+    transition: all 0.3s ease;
+    opacity: 0.5;
+}
+
+.circle-graphic::before {
+    content: '';
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid var(--secondary);
+    transition: all 0.3s ease;
+    opacity: 0.2;
+}
+
+.circle-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    /* Make the image circular */
+}
+
+.nav-circle.active .circle-icon-img {
+    /* filter: brightness(0) invert(1); REMOVED to keep the token look */
+    transform: scale(0.95);
+    border: 2px solid white;
+    /* Add a white border to make it look like a token */
+}
+
+.nav-circle.active .circle-graphic {
+    background: var(--primary);
+    border-color: var(--primary);
+    box-shadow: 0 0 15px rgba(255, 149, 0, 0.4);
+}
+
+.nav-circle.active .circle-graphic::after {
+    border-color: var(--primary);
+    width: 52px;
+    height: 52px;
+    opacity: 0.6;
+}
+
+.nav-circle.active .circle-graphic::before {
+    border-color: var(--primary);
+    width: 60px;
+    height: 60px;
+    opacity: 0.3;
+}
+
+.slide-bg-watermark {
+    position: absolute;
+    right: -40px;
+    bottom: -40px;
+    width: 500px;
+    height: 500px;
+    opacity: 0.85;
+    /* Dominate opacity */
+    z-index: 1;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    filter: contrast(1.1) sepia(1) hue-rotate(320deg) saturate(0.8) drop-shadow(0 0 10px rgba(0, 0, 0, 0.1));
+    mix-blend-mode: multiply;
+}
+
+
+.nav-label {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--secondary);
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.nav-sublabel {
+    font-size: 0.85rem;
+    color: var(--primary);
+    font-weight: 600;
+    text-align: center;
+    margin-top: 0.2rem;
+}

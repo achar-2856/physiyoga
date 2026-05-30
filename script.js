@@ -493,6 +493,267 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // --- Booking Form WhatsApp Redirection ---
+    const bookingForm = document.getElementById('appointment-form');
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Extract values
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value || 'Not provided';
+            const message = document.getElementById('message').value || 'None';
+
+            // Construct message template
+            const messageText = `Hello Physiyoga! I would like to request an appointment.
+
+*Patient Details:*
+• *Name:* ${name}
+• *Phone:* ${phone}
+• *Email:* ${email}
+• *Condition / Pain Details:* ${message}`;
+
+            const encodedText = encodeURIComponent(messageText);
+            const whatsappUrl = `https://wa.me/919606044310?text=${encodedText}`;
+
+            // Open in new tab
+            window.open(whatsappUrl, '_blank');
+        });
+    }
+
+    // --- Floating Assistant Chatbot Widget ---
+    if (!document.querySelector('.chatbot-widget')) {
+        const chatbotContainer = document.createElement('div');
+        chatbotContainer.className = 'chatbot-widget';
+        chatbotContainer.innerHTML = `
+            <div class="chatbot-window" id="chatbot-window">
+                <div class="chatbot-header">
+                    <div class="chatbot-header-info">
+                        <div class="chatbot-avatar">P</div>
+                        <div class="chatbot-header-text">
+                            <span class="chatbot-header-title">Physiyoga Assistant</span>
+                            <span class="chatbot-header-status">Online</span>
+                        </div>
+                    </div>
+                    <button class="chatbot-close" id="chatbot-close" aria-label="Close Chat">&times;</button>
+                </div>
+                <div class="chatbot-messages" id="chatbot-messages">
+                    <div class="chatbot-msg bot">
+                        <p>Hello! 👋 Welcome to Physiyoga Clinic.</p>
+                        <p>I am Dr. Swetha's AI Assistant. How can I help you today?</p>
+                    </div>
+                </div>
+                <div class="chatbot-chips" id="chatbot-chips">
+                    <button class="chatbot-chip" data-query="book">📅 Book Appointment</button>
+                    <button class="chatbot-chip" data-query="services">💼 Our Services</button>
+                    <button class="chatbot-chip" data-query="location">📍 Clinic Location</button>
+                    <button class="chatbot-chip" data-query="hours">🕒 Clinic Hours</button>
+                </div>
+                <form class="chatbot-footer" id="chatbot-form">
+                    <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Type a message..." required autocomplete="off">
+                    <button type="submit" class="chatbot-send" aria-label="Send Message">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+            <button class="chatbot-toggle" id="chatbot-toggle" aria-label="Open Chat">
+                <svg viewBox="0 0 24 24" id="chat-icon-open" style="width: 28px; height: 28px;">
+                    <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+                </svg>
+                <svg viewBox="0 0 24 24" id="chat-icon-close" style="display: none; width: 28px; height: 28px;">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+                <div class="badge-ping" id="chatbot-badge"></div>
+            </button>
+        `;
+        document.body.appendChild(chatbotContainer);
+
+        const toggleBtn = document.getElementById('chatbot-toggle');
+        const chatWindow = document.getElementById('chatbot-window');
+        const badge = document.getElementById('chatbot-badge');
+        const chatIconOpen = document.getElementById('chat-icon-open');
+        const chatIconClose = document.getElementById('chat-icon-close');
+        const closeBtn = document.getElementById('chatbot-close');
+        const messagesContainer = document.getElementById('chatbot-messages');
+        const chatForm = document.getElementById('chatbot-form');
+        const chatInput = document.getElementById('chatbot-input');
+        const chipsContainer = document.getElementById('chatbot-chips');
+
+        // Check if previously opened in session to hide badge
+        if (sessionStorage.getItem('chatbotOpened') === 'true') {
+            if (badge) badge.style.display = 'none';
+        }
+
+        function toggleChat() {
+            const isOpen = chatWindow.classList.toggle('open');
+            toggleBtn.classList.toggle('active', isOpen);
+            if (isOpen) {
+                chatIconOpen.style.display = 'none';
+                chatIconClose.style.display = 'block';
+                if (badge) badge.style.display = 'none';
+                sessionStorage.setItem('chatbotOpened', 'true');
+                // Scroll to bottom on open
+                setTimeout(() => {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 100);
+            } else {
+                chatIconOpen.style.display = 'block';
+                chatIconClose.style.display = 'none';
+            }
+        }
+
+        toggleBtn.addEventListener('click', toggleChat);
+        closeBtn.addEventListener('click', toggleChat);
+
+        function addMessage(text, sender = 'bot') {
+            const msgElement = document.createElement('div');
+            msgElement.className = `chatbot-msg ${sender}`;
+            msgElement.innerHTML = text;
+            messagesContainer.appendChild(msgElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        const chipData = {
+            book: { text: "📅 Book Appointment", query: "book" },
+            services: { text: "💼 Our Services", query: "services" },
+            location: { text: "📍 Clinic Location", query: "location" },
+            hours: { text: "🕒 Clinic Hours", query: "hours" },
+            pain: { text: "🦴 Joint/Muscle Pain", query: "pain" },
+            pregnancy: { text: "🤰 Pregnancy Rehab", query: "pregnancy" },
+            sports: { text: "🏃 Sports Conditioning", query: "sports" },
+            yoga: { text: "🧘 Yoga Integration", query: "yoga" }
+        };
+
+        function renderChips(chipsList) {
+            chipsContainer.innerHTML = '';
+            if (chipsList.length === 0) {
+                chipsContainer.style.display = 'none';
+                return;
+            }
+            chipsContainer.style.display = 'flex';
+            chipsList.forEach(key => {
+                const data = chipData[key];
+                if (data) {
+                    const chip = document.createElement('button');
+                    chip.className = 'chatbot-chip';
+                    chip.textContent = data.text;
+                    chip.onclick = () => {
+                        addMessage(data.text, 'user');
+                        handleBotResponse(data.query);
+                    };
+                    chipsContainer.appendChild(chip);
+                }
+            });
+        }
+
+        function handleBotResponse(userText) {
+            const text = userText.toLowerCase().trim();
+
+            // Typing indicator
+            const typingElement = document.createElement('div');
+            typingElement.className = 'chatbot-msg bot typing-indicator';
+            typingElement.innerHTML = `
+                <div style="display: flex; gap: 4px; align-items: center; height: 16px;">
+                    <span style="width:6px;height:6px;background:#94a3b8;border-radius:50%;animation:blink 1.4s infinite both;"></span>
+                    <span style="width:6px;height:6px;background:#94a3b8;border-radius:50%;animation:blink 1.4s infinite both 0.2s;"></span>
+                    <span style="width:6px;height:6px;background:#94a3b8;border-radius:50%;animation:blink 1.4s infinite both 0.4s;"></span>
+                </div>
+            `;
+            messagesContainer.appendChild(typingElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            setTimeout(() => {
+                typingElement.remove();
+
+                let response = '';
+                let showChips = [];
+
+                if (text.includes('book') || text.includes('appoint') || text.includes('schedule') || text.includes('consult')) {
+                    response = `<p>To book an appointment, you can fill out our form on the <a href="contact.html">Contact Page</a> which will redirect you to WhatsApp. Alternatively, you can message us directly on WhatsApp right now!</p>
+                    <a href="https://wa.me/919606044310?text=Hello%20Physiyoga%2C%20I%20would%20like%20to%20book%20an%20appointment." target="_blank" class="chatbot-btn-link">
+                        Chat on WhatsApp
+                    </a>`;
+                    showChips = ['services', 'location', 'hours'];
+                } else if (text.includes('service') || text.includes('treat') || text.includes('therapy') || text.includes('rehab')) {
+                    response = `<p>We offer specialized, evidence-based physiotherapy & yoga rehabilitation:</p>
+                    <ul>
+                        <li><b>Musculoskeletal Physiotherapy</b> (joint/muscle pain)</li>
+                        <li><b>Antenatal & Postnatal Care</b> (pregnancy health)</li>
+                        <li><b>Movement & Biomechanical Assessment</b></li>
+                        <li><b>Return to Sport Conditioning</b></li>
+                        <li><b>Motor Control & Joint Stability</b></li>
+                    </ul>
+                    <p>Which area are you interested in?</p>`;
+                    showChips = ['pain', 'pregnancy', 'sports', 'yoga'];
+                } else if (text.includes('location') || text.includes('address') || text.includes('where') || text.includes('map') || text.includes('clinic')) {
+                    response = `<p><b>Clinic Address:</b><br>No 9, First Floor, Bharath Housing Society, 60 Feet Road, Thurahalli Rd, near Gubbalala Lake, Bengaluru, Karnataka 560061</p>
+                    <p>📍 <a href="https://maps.app.goo.gl/MJdLWusp6R1fvdPx8" target="_blank">Open in Google Maps</a></p>`;
+                    showChips = ['book', 'hours', 'services'];
+                } else if (text.includes('hour') || text.includes('time') || text.includes('timing') || text.includes('open') || text.includes('schedule')) {
+                    response = `<p><b>Our Clinic Hours:</b></p>
+                    <ul>
+                        <li><b>Monday – Friday:</b> 9:00 AM – 8:00 PM</li>
+                        <li><b>Saturday:</b> 9:00 AM – 5:00 PM</li>
+                        <li><b>Sunday:</b> Closed</li>
+                    </ul>`;
+                    showChips = ['book', 'location', 'services'];
+                } else if (text.includes('pain') || text.includes('back') || text.includes('neck') || text.includes('joint') || text.includes('injury') || text.includes('muscle') || text.includes('spine') || text.includes('disc')) {
+                    response = `<p>Dr. Swetha specializes in treating mechanical spine conditions, disk injuries, neck/back pain, and postural strain.</p>
+                    <p>We use thorough biomechanical assessment combined with therapeutic yoga movements to target the root cause.</p>`;
+                    showChips = ['book', 'services', 'hours'];
+                } else if (text.includes('pregnancy') || text.includes('maternal') || text.includes('postnatal') || text.includes('baby') || text.includes('antenatal') || text.includes('delivery')) {
+                    response = `<p>Our maternal program provides safe rehabilitation during pregnancy and after delivery, focusing on core recovery, pelvic stability, and pain management.</p>`;
+                    showChips = ['book', 'services', 'hours'];
+                } else if (text.includes('sport') || text.includes('run') || text.includes('athlete') || text.includes('exercise') || text.includes('gym')) {
+                    response = `<p>Our Return to Sport program bridges the gap between basic pain relief and high-performance athletic activity, targeting biomechanical efficiency.</p>`;
+                    showChips = ['book', 'services', 'location'];
+                } else if (text.includes('yoga') || text.includes('asana') || text.includes('pranayama')) {
+                    response = `<p>We utilize clinical yoga integration, taking movement principles from yoga and applying them as precise therapeutic tools under clinical supervision.</p>`;
+                    showChips = ['services', 'book', 'hours'];
+                } else if (text.includes('fee') || text.includes('cost') || text.includes('price') || text.includes('charge')) {
+                    response = `<p>Our session fees depend on the specific assessment and treatment plans required. Please contact Dr. Swetha on WhatsApp at <b>9606044310</b> for details.</p>
+                    <a href="https://wa.me/919606044310?text=Hello%20Physiyoga%2C%20could%20you%20please%20share%20the%20pricing%20details%3F" target="_blank" class="chatbot-btn-link">Inquire Pricing</a>`;
+                    showChips = ['book', 'location', 'hours'];
+                } else if (text.includes('hello') || text.includes('hi') || text.includes('hey') || text.includes('good morning') || text.includes('good afternoon')) {
+                    response = `<p>Hello! How can I help you with your clinical health and movement goals today?</p>`;
+                    showChips = ['book', 'services', 'location', 'hours'];
+                } else {
+                    response = `<p>I want to make sure you get the most accurate support! For detailed medical inquiries, it is best to speak with Dr. Swetha.</p>
+                    <p>Feel free to call or WhatsApp us at <b>9606044310</b>.</p>
+                    <a href="https://wa.me/919606044310" target="_blank" class="chatbot-btn-link">WhatsApp Doctor</a>`;
+                    showChips = ['book', 'services', 'location', 'hours'];
+                }
+
+                addMessage(response, 'bot');
+                renderChips(showChips);
+
+            }, 800);
+        }
+
+        // Attach user chat form handler
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const queryText = chatInput.value.trim();
+            if (!queryText) return;
+
+            addMessage(queryText, 'user');
+            chatInput.value = '';
+            handleBotResponse(queryText);
+        });
+
+        // Initialize preset chips click handlers
+        document.querySelectorAll('.chatbot-chip').forEach(chip => {
+            const query = chip.getAttribute('data-query');
+            chip.onclick = () => {
+                addMessage(chip.textContent, 'user');
+                handleBotResponse(query);
+            };
+        });
+    }
+
     // --- PWA Service Worker ---
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

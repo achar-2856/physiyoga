@@ -9,6 +9,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="modal.css">
     <style>
         .form-group {
             margin-bottom: 1.5rem;
@@ -88,27 +89,27 @@
                 <h2 class="mb-8">Request an Appointment</h2>
                 <form action="#" method="POST" id="appointment-form">
 
-                    <div class="form-group" style="display: none;">
+                    <div class="form-group">
                         <label class="form-label" for="service">Select Service</label>
-                        <select id="service" class="form-input" required disabled>
+                        <select id="service" class="form-input" required>
                             <option value="">Choose a Service...</option>
-                            <option value="Consultation">General Consultation</option>
-                            <option value="Musculoskeletal">Musculoskeletal Physiotherapy</option>
-                            <option value="Maternal Rehab">Antenatal & Postnatal Physiotherapy</option>
-                            <option value="Yoga Therapy">Therapeutic Yoga</option>
+                            <option value="General Consultation">General Consultation</option>
+                            <option value="Musculoskeletal Physiotherapy">Musculoskeletal Physiotherapy</option>
+                            <option value="Antenatal & Postnatal Physiotherapy">Antenatal & Postnatal Physiotherapy</option>
+                            <option value="Therapeutic Yoga">Therapeutic Yoga</option>
                             <option value="Post-Op Rehab">Post-Op Rehab</option>
                             <option value="Sports Rehab">Sports Rehab</option>
                         </select>
                     </div>
 
-                    <div style="display: none; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div class="form-group">
                             <label class="form-label" for="date">Preferred Date</label>
-                            <input type="date" id="date" class="form-input" required disabled>
+                            <input type="date" id="date" class="form-input" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="time">Preferred Time</label>
-                            <select id="time" class="form-input" required disabled>
+                            <select id="time" class="form-input" required>
                                 <option value="">Select Time</option>
                                 <option value="Morning">Morning (9AM - 12PM)</option>
                                 <option value="Afternoon">Afternoon (1PM - 5PM)</option>
@@ -147,27 +148,27 @@
 
             <!-- Contact Info -->
             <div class="animate-on-scroll">
-                <h2 class="mb-8">Clinic Information</h2>
                 <div style="margin-bottom: 2rem;">
-                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Contact</h3>
-                    <p style="color: var(--gray);">
-                        Phone: 9606044310<br>
-                        Email: dr.swetha@physiyoga.in
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Clinic Address</h3>
+                    <p style="color: var(--gray); line-height: 1.6; margin-bottom: 0.5rem;">
+                        No 9, First Floor, Bharath Housing Society,<br>
+                        60 Feet Road, Thurahalli Rd,<br>
+                        near Gubbalala Lake, Bengaluru, Karnataka 560061
                     </p>
                 </div>
-                <div style="margin-bottom: 2rem; display: none;">
+                <div style="margin-bottom: 2rem;">
                     <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Clinic Hours</h3>
-                    <ul style="color: var(--gray);">
+                    <ul style="color: var(--gray); line-height: 1.6;">
                         <li>Mon - Fri: 9:00 AM - 8:00 PM</li>
                         <li>Saturday: 9:00 AM - 5:00 PM</li>
                         <li>Sunday: Closed</li>
                     </ul>
                 </div>
-
-                <!-- Map Placeholder -->
-                <div
-                    style="width: 100%; height: 250px; background: #e2e8f0; border-radius: 1rem; display: none; align-items: center; justify-content: center; color: #94a3b8;">
-                    [Google Map Placeholder]
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Find Us on Map</h3>
+                    <div style="width: 100%; border-radius: 1rem; overflow: hidden; box-shadow: var(--shadow); border: 1px solid #cbd5e1;">
+                        <iframe src="https://maps.google.com/maps?q=Physiyoga%20Bharath%20Housing%20Society%20Bengaluru&t=&z=16&ie=UTF8&iwloc=&output=embed" width="100%" height="280" style="border:0; display: block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
                 </div>
             </div>
         </div>
@@ -203,6 +204,27 @@
         </div>
     </footer>
     <script src="script.js"></script>
+
+    <!-- Booking Channel Selection Modal -->
+    <div id="booking-channel-modal" class="modal">
+        <div class="modal-content" style="max-width: 450px; text-align: center; padding: 2.5rem; margin: 15% auto; position: relative;">
+            <span class="close-modal" id="close-booking-modal" style="font-size: 28px; font-weight: bold; position: absolute; right: 1.5rem; top: 1rem; cursor: pointer; color: #aaa; transition: color 0.3s;">&times;</span>
+            <h3 style="margin-top: 0; margin-bottom: 0.75rem; color: var(--secondary); font-size: 1.5rem; font-family: var(--font-heading);">Submit Booking Request</h3>
+            <p style="color: var(--gray); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.5;">How would you like to send your appointment details to Dr. Swetha?</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <button id="submit-whatsapp" class="btn btn-primary" style="background-color: #25D366; color: white; border: none; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 0.85rem 1rem; border-radius: var(--radius); cursor: pointer; font-weight: 600; transition: transform 0.2s, background-color 0.2s;">
+                    <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.73-1.45L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.966C16.59 1.978 14.12 .953 11.5 1.027 6.062 1.027 1.638 5.398 1.635 10.83c0 1.73.473 3.418 1.368 4.908L2.009 21.03l5.362-1.408zM17.9 14.482c-.318-.16-.1.885-.4.885s-.837-.362-1.393-.9c-.438-.39-.733-.872-.82-1.03-.087-.16-.01-.246.07-.325.07-.07.16-.186.24-.28.08-.093.107-.16.16-.32.054-.16.027-.3-.014-.38-.04-.08-.363-.876-.497-1.2-.13-.316-.26-.273-.362-.278-.093-.005-.2-.006-.307-.006-.107 0-.282.04-.43.2-.147.16-.563.55-.563 1.34s.574 1.55.654 1.66c.08.11 1.13 1.726 2.737 2.42.383.165.68.263.91.337.385.122.735.105 1.012.064.31-.047.95-.39 1.085-.768.136-.378.136-.7.095-.768-.04-.07-.15-.11-.47-.27z"/></svg>
+                    Send via WhatsApp
+                </button>
+                
+                <button id="submit-email" class="btn btn-primary" style="background-color: var(--primary); color: white; border: none; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 0.85rem 1rem; border-radius: var(--radius); cursor: pointer; font-weight: 600; transition: transform 0.2s, background-color 0.2s;">
+                    <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+                    Send via Email
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

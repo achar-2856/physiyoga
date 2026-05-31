@@ -493,33 +493,103 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Booking Form WhatsApp Redirection ---
+    // --- Booking Form Submission Channel Modal ---
     const bookingForm = document.getElementById('appointment-form');
-    if (bookingForm) {
+    const channelModal = document.getElementById('booking-channel-modal');
+    const closeChannelModal = document.getElementById('close-booking-modal');
+    
+    if (bookingForm && channelModal) {
+        let submissionData = {};
+
         bookingForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
             // Extract values
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const email = document.getElementById('email').value || 'Not provided';
-            const message = document.getElementById('message').value || 'None';
+            submissionData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value || 'Not provided',
+                service: document.getElementById('service').value,
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                message: document.getElementById('message').value || 'None'
+            };
 
-            // Construct message template
-            const messageText = `Hello Physiyoga! I would like to request an appointment.
+            // Format date nicely
+            if (submissionData.date) {
+                const dateObj = new Date(submissionData.date);
+                submissionData.formattedDate = dateObj.toLocaleDateString('en-US', {
+                    weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'
+                });
+            } else {
+                submissionData.formattedDate = 'Not specified';
+            }
 
-*Patient Details:*
-• *Name:* ${name}
-• *Phone:* ${phone}
-• *Email:* ${email}
-• *Condition / Pain Details:* ${message}`;
-
-            const encodedText = encodeURIComponent(messageText);
-            const whatsappUrl = `https://wa.me/919606044310?text=${encodedText}`;
-
-            // Open in new tab
-            window.open(whatsappUrl, '_blank');
+            // Open selection modal
+            channelModal.style.display = 'block';
         });
+
+        // Close Modal Events
+        if (closeChannelModal) {
+            closeChannelModal.onclick = () => {
+                channelModal.style.display = 'none';
+            };
+        }
+
+        window.addEventListener('click', (event) => {
+            if (event.target === channelModal) {
+                channelModal.style.display = 'none';
+            }
+        });
+
+        // WhatsApp Submission Handler
+        const btnWa = document.getElementById('submit-whatsapp');
+        if (btnWa) {
+            btnWa.addEventListener('click', () => {
+                const messageText = `Hello Physiyoga! I would like to request an appointment.
+
+*Appointment Request:*
+• *Name:* ${submissionData.name}
+• *Phone:* ${submissionData.phone}
+• *Email:* ${submissionData.email}
+• *Service:* ${submissionData.service}
+• *Preferred Date:* ${submissionData.formattedDate}
+• *Preferred Time:* ${submissionData.time}
+• *Condition / Notes:* ${submissionData.message}`;
+
+                const encodedText = encodeURIComponent(messageText);
+                const whatsappUrl = `https://wa.me/919606044310?text=${encodedText}`;
+                
+                channelModal.style.display = 'none';
+                window.open(whatsappUrl, '_blank');
+            });
+        }
+
+        // Email Submission Handler
+        const btnMail = document.getElementById('submit-email');
+        if (btnMail) {
+            btnMail.addEventListener('click', () => {
+                const emailSubject = `Appointment Request - ${submissionData.name}`;
+                const emailBody = `Hello Physiyoga!
+
+I would like to request an appointment at your clinic. Here are my details:
+
+• Name: ${submissionData.name}
+• Phone: ${submissionData.phone}
+• Email: ${submissionData.email}
+• Selected Service: ${submissionData.service}
+• Preferred Date: ${submissionData.formattedDate}
+• Preferred Time: ${submissionData.time}
+
+Condition / Additional Notes:
+${submissionData.message}
+
+Please confirm my availability. Thank you!`;
+
+                channelModal.style.display = 'none';
+                window.location.href = `mailto:dr.swetha@physiyoga.in?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+            });
+        }
     }
 
     // --- Floating Assistant Chatbot Widget ---

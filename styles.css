@@ -1,9 +1,9 @@
-/* @font-face {
+@font-face {
     font-family: 'Bandipura';
     src: url('fonts/ATSBandipura-Bold.woff2') format('woff2');
     font-display: swap;
     font-weight: 700;
-} */
+}
 
 :root {
     --primary: #FF9500;

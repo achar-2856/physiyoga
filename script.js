@@ -483,7 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Add to footer
-        const footerLinksElement = document.querySelector('.footer-links');
+        const footerLinksElement = document.getElementById('footer-quick-links') || document.querySelector('.footer-links');
         if (footerLinksElement) {
             if (!footerLinksElement.querySelector('a[href="documents.html"]')) {
                 const docLi = document.createElement('li');

@@ -828,8 +828,29 @@ Please confirm my availability. Thank you!`;
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./service-worker.js')
-                .then(reg => console.log('Service Worker: Registered'))
+                .then(reg => {
+                    console.log('Service Worker: Registered');
+                    // Check if there is an update waiting
+                    reg.addEventListener('updatefound', () => {
+                        const newWorker = reg.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New content available, trigger update
+                                console.log('New service worker installed; skipWaiting active.');
+                            }
+                        });
+                    });
+                })
                 .catch(err => console.log('Service Worker: Error: ', err));
+        });
+
+        // Reload the page when the new service worker takes over control
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) {
+                window.location.reload();
+                refreshing = true;
+            }
         });
     }
 });

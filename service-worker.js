@@ -1,4 +1,4 @@
-const CACHE_NAME = 'physiyoga-v3';
+const CACHE_NAME = 'physiyoga-v4';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -22,6 +22,7 @@ self.addEventListener('install', (event) => {
             return cache.addAll(ASSETS_TO_CACHE);
         })
     );
+    self.skipWaiting(); // Force the waiting service worker to become active immediately
 });
 
 // Activate Event (Cleanup old caches)

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'physiyoga-v2';
+const CACHE_NAME = 'physiyoga-v3';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -39,12 +39,23 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch Event
+// Fetch Event (Network-First with Cache Fallback)
 self.addEventListener('fetch', (event) => {
     event.respondWith(
-        caches.match(event.request).then((response) => {
-            // Return cached response if found, else fetch from network
-            return response || fetch(event.request);
-        })
+        fetch(event.request)
+            .then((response) => {
+                // If a valid response is returned, clone and cache it
+                if (response && response.status === 200) {
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
+                }
+                return response;
+            })
+            .catch(() => {
+                // If offline or network fails, fallback to cache
+                return caches.match(event.request);
+            })
     );
 });

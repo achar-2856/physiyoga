@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const carouselData = [
         {
             yogic: "Yama",
+            kannada: "ಯಮ",
             physio: "Load Regulation Behavior",
             title: "Regulation of Movement Behavior",
             text: "Represents the ability to avoid maladaptive loading behaviors such as repetitive joint stress, sustained faulty postures, and overuse without recovery.",
@@ -67,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             yogic: "Niyama",
+            kannada: "ನಿಯಮ",
             physio: "Rehabilitation Adherence",
             title: "Internal Discipline & Self-Maintenance",
             text: "Focuses on personal observances like adherence to therapeutic exercise, sleep optimization, and gradual exposure to functional load.",
@@ -76,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             yogic: "Asana",
+            kannada: "ಆಸನ",
             physio: "Biomechanical Positioning",
             title: "Structured Postural Control",
             text: "Uses physical posture to optimize joint centration, balance muscular force couples, and improve segmental mobility–stability ratios.",
@@ -85,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             yogic: "Pranayama",
+            kannada: "ಪ್ರಾಣಾಯಾಮ",
             physio: "Respiratory-Motor Control",
             title: "Respiratory–Neuromuscular Regulation",
             text: "Utilizes breathing as a neuromotor control mechanism to influence intra-abdominal pressure, core stabilization, and autonomic balance.",
@@ -94,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             yogic: "Pratyahara",
+            kannada: "ಪ್ರತ್ಯಾಹಾರ",
             physio: "Sensory-Motor Modulation",
             title: "Sensory Integration & Modulation",
             text: "Involves refinement of sensory-motor processing, reducing nociceptive hypersensitivity and enhancing proprioceptive accuracy.",
@@ -103,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             yogic: "Dharana",
+            kannada: "ಧಾರಣ",
             physio: "Directed Motor Control",
             title: "Directed Motor Attention",
             text: "Uses focused attention to improve muscle recruitment precision, timing of activation, and movement accuracy for motor relearning.",
@@ -112,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             yogic: "Dhyana",
+            kannada: "ಧ್ಯಾನ",
             physio: "Motor Efficiency",
             title: "Sustained Neuromotor Integration",
             text: "Achieves automaticity of efficient movement where repeated practice leads to reduced cognitive load and energy-efficient biomechanics.",
@@ -121,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             yogic: "Samadhi",
+            kannada: "ಸಮಾಧಿ",
             physio: "Functional System Integration",
             title: "Global Movement System Harmony",
             text: "The culmination of functional integration, ensuring balanced mobility, efficient load transfer, and coordinated neuromuscular function.",
@@ -145,7 +153,10 @@ document.addEventListener('DOMContentLoaded', () => {
             slide.style.background = item.bg;
             slide.innerHTML = `
                 <div class="slide-content">
-                    <h2 class="slide-title">${item.yogic}</h2>
+                    <h2 class="slide-title" style="line-height: 1.15;">
+                        <span style="font-family: 'Bandipura'; font-size: 1.4rem; color: var(--accent); display: block; margin-bottom: 0.2rem; font-weight: normal; text-transform: none;">${item.kannada}</span>
+                        ${item.yogic}
+                    </h2>
                     <div class="slide-subtitle">
                         <span>${item.physio}</span>
                     </div>

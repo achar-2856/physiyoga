@@ -1,4 +1,4 @@
-const CACHE_NAME = 'physiyoga-v4';
+const CACHE_NAME = 'physiyoga-v6';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

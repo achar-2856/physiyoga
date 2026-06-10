@@ -3,12 +3,49 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileBtn = document.getElementById('mobile-menu-btn');
     const navLinks = document.querySelector('.nav-links');
 
-    if (mobileBtn) {
-        mobileBtn.addEventListener('click', () => {
+    function closeMobileMenu() {
+        if (navLinks && navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            if (mobileBtn) {
+                mobileBtn.textContent = '☰';
+            }
+        }
+    }
+
+    if (mobileBtn && navLinks) {
+        mobileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             navLinks.classList.toggle('active');
             const icon = navLinks.classList.contains('active') ? '✕' : '☰';
             mobileBtn.textContent = icon;
         });
+
+        // Close when clicking any link inside the navigation dropdown (e.g. dynamic pages or anchors)
+        navLinks.addEventListener('click', (e) => {
+            if (e.target.closest('a')) {
+                closeMobileMenu();
+            }
+        });
+
+        // Close when clicking anywhere outside the navbar container
+        document.addEventListener('click', (e) => {
+            const navbar = document.querySelector('.navbar');
+            if (navbar && !navbar.contains(e.target)) {
+                closeMobileMenu();
+            }
+        });
+
+        // Close when scrolling page (ignoring tiny jitters)
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            if (navLinks.classList.contains('active')) {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (Math.abs(scrollTop - lastScrollTop) > 10) {
+                    closeMobileMenu();
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            }
+        }, { passive: true });
     }
 
     // --- Smooth Scroll ---
@@ -20,10 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 target.scrollIntoView({
                     behavior: 'smooth'
                 });
-                if (navLinks.classList.contains('active')) {
-                    navLinks.classList.remove('active');
-                    mobileBtn.textContent = '☰';
-                }
+                closeMobileMenu();
             }
         });
     });

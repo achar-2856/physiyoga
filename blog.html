@@ -26,10 +26,12 @@
             border: 1px solid #e2e8f0;
         }
 
-        .blog-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-            border-color: #cbd5e1;
+        @media (hover: hover) {
+            .blog-card:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-lg);
+                border-color: #cbd5e1;
+            }
         }
 
         .blog-img {
@@ -71,7 +73,13 @@
             transition: color 0.2s;
         }
 
-        .blog-title-link:hover {
+        @media (hover: hover) {
+            .blog-title-link:hover {
+                color: var(--primary);
+            }
+        }
+
+        .blog-title-link:active {
             color: var(--primary);
         }
 
@@ -138,7 +146,15 @@
             white-space: nowrap;
         }
 
-        .category-pill:hover {
+        @media (hover: hover) {
+            .category-pill:hover {
+                background-color: #f1f5f9;
+                color: var(--secondary);
+                border-color: #cbd5e1;
+            }
+        }
+
+        .category-pill:active {
             background-color: #f1f5f9;
             color: var(--secondary);
             border-color: #cbd5e1;
@@ -185,30 +201,60 @@
             color: var(--gray);
         }
 
-        .share-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
+        @media (hover: hover) {
+            .share-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--shadow);
+            }
+
+            .share-btn.whatsapp:hover {
+                background-color: #25D366;
+                border-color: #25D366;
+                color: var(--white);
+            }
+
+            .share-btn.twitter:hover {
+                background-color: #000000;
+                border-color: #000000;
+                color: var(--white);
+            }
+
+            .share-btn.facebook:hover {
+                background-color: #1877F2;
+                border-color: #1877F2;
+                color: var(--white);
+            }
+
+            .share-btn.copy:hover {
+                background-color: var(--primary);
+                border-color: var(--primary);
+                color: var(--white);
+            }
         }
 
-        .share-btn.whatsapp:hover {
+        .share-btn:active {
+            transform: translateY(0);
+        }
+
+        .share-btn.whatsapp:active {
             background-color: #25D366;
             border-color: #25D366;
             color: var(--white);
         }
 
-        .share-btn.twitter:hover {
+        .share-btn.twitter:active {
             background-color: #000000;
             border-color: #000000;
             color: var(--white);
         }
 
-        .share-btn.facebook:hover {
+        .share-btn.facebook:active {
             background-color: #1877F2;
             border-color: #1877F2;
             color: var(--white);
         }
 
-        .share-btn.copy:hover {
+        .share-btn.copy:active {
             background-color: var(--primary);
             border-color: var(--primary);
             color: var(--white);

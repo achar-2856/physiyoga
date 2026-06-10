@@ -62,13 +62,21 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+        @media (hover: hover) {
+            .btn-logout:hover {
+                background-color: #ef4444;
+                color: var(--white);
+                border-color: #ef4444;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+            }
+        }
 
-        .btn-logout:hover {
+        .btn-logout:active {
             background-color: #ef4444;
             color: var(--white);
             border-color: #ef4444;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+            transform: translateY(0);
         }
 
         /* Folder Grid View */
@@ -105,9 +113,14 @@
             transition: opacity 0.3s ease;
         }
 
-        .folder-card.active::before,
-        .folder-card:hover::before {
+        .folder-card.active::before {
             opacity: 1;
+        }
+
+        @media (hover: hover) {
+            .folder-card:hover::before {
+                opacity: 1;
+            }
         }
 
         .folder-card.active {
@@ -116,10 +129,17 @@
             background: #fffdf9;
         }
 
-        .folder-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-            border-color: #cbd5e1;
+        @media (hover: hover) {
+            .folder-card:hover {
+                transform: translateY(-3px);
+                box-shadow: var(--shadow-lg);
+                border-color: #cbd5e1;
+            }
+        }
+
+        .folder-card:active {
+            background: #fffdf9;
+            border-color: var(--primary);
         }
 
         .folder-icon-wrapper {
@@ -135,8 +155,10 @@
             transition: transform 0.3s ease;
         }
 
-        .folder-card:hover .folder-icon {
-            transform: scale(1.08);
+        @media (hover: hover) {
+            .folder-card:hover .folder-icon {
+                transform: scale(1.08);
+            }
         }
 
         .file-count-badge {
@@ -227,11 +249,18 @@
             gap: 1.25rem;
         }
 
-        .file-item:hover {
+        @media (hover: hover) {
+            .file-item:hover {
+                border-color: #cbd5e1;
+                background: var(--white);
+                transform: translateX(4px);
+                box-shadow: var(--shadow);
+            }
+        }
+
+        .file-item:active {
             border-color: #cbd5e1;
             background: var(--white);
-            transform: translateX(4px);
-            box-shadow: var(--shadow);
         }
 
         .file-info-group {
@@ -319,10 +348,17 @@
             color: #1d4ed8;
         }
 
-        .btn-action-view:hover {
+        @media (hover: hover) {
+            .btn-action-view:hover {
+                background: #1d4ed8;
+                color: var(--white);
+                transform: translateY(-1px);
+            }
+        }
+
+        .btn-action-view:active {
             background: #1d4ed8;
             color: var(--white);
-            transform: translateY(-1px);
         }
 
         .btn-action-download {
@@ -330,10 +366,17 @@
             color: #15803d;
         }
 
-        .btn-action-download:hover {
+        @media (hover: hover) {
+            .btn-action-download:hover {
+                background: #15803d;
+                color: var(--white);
+                transform: translateY(-1px);
+            }
+        }
+
+        .btn-action-download:active {
             background: #15803d;
             color: var(--white);
-            transform: translateY(-1px);
         }
 
         .btn-action-print {
@@ -341,10 +384,17 @@
             color: #c2410c;
         }
 
-        .btn-action-print:hover {
+        @media (hover: hover) {
+            .btn-action-print:hover {
+                background: #c2410c;
+                color: var(--white);
+                transform: translateY(-1px);
+            }
+        }
+
+        .btn-action-print:active {
             background: #c2410c;
             color: var(--white);
-            transform: translateY(-1px);
         }
 
         /* No active selection state */
@@ -450,7 +500,7 @@
             <!-- Folders Grid -->
             <div class="folder-grid">
                 <!-- Folder 1 -->
-                <div class="folder-card" data-folder="brochures">
+                <div class="folder-card" data-folder="brochures" onclick="">
                     <div class="folder-icon-wrapper">
                         <span class="folder-icon">📂</span>
                         <span class="file-count-badge" id="badge-brochures">2 files</span>
@@ -460,7 +510,7 @@
                 </div>
 
                 <!-- Folder 2 -->
-                <div class="folder-card" data-folder="visiting">
+                <div class="folder-card" data-folder="visiting" onclick="">
                     <div class="folder-icon-wrapper">
                         <span class="folder-icon">📂</span>
                         <span class="file-count-badge" id="badge-visiting">5 files</span>
@@ -471,7 +521,7 @@
                 </div>
 
                 <!-- Folder 3 -->
-                <div class="folder-card" data-folder="flyers">
+                <div class="folder-card" data-folder="flyers" onclick="">
                     <div class="folder-icon-wrapper">
                         <span class="folder-icon">📂</span>
                         <span class="file-count-badge" id="badge-flyers">3 files</span>
@@ -482,7 +532,7 @@
                 </div>
 
                 <!-- Folder 4 -->
-                <div class="folder-card" data-folder="cv-logos">
+                <div class="folder-card" data-folder="cv-logos" onclick="">
                     <div class="folder-icon-wrapper">
                         <span class="folder-icon">📂</span>
                         <span class="file-count-badge" id="badge-cv-logos">3 files</span>
@@ -493,7 +543,7 @@
                 </div>
 
                 <!-- Folder 5 (Blog Manager) -->
-                <div class="folder-card" data-folder="blog-manager">
+                <div class="folder-card" data-folder="blog-manager" onclick="">
                     <div class="folder-icon-wrapper">
                         <span class="folder-icon">✍️</span>
                         <span class="file-count-badge" id="badge-blogs">Manage Blogs</span>
@@ -1220,8 +1270,8 @@
     <!-- Blog Preview Modal -->
     <div id="blog-preview-modal" class="modal">
         <div class="modal-content" style="max-width: 800px; padding: 0; overflow: hidden; margin: 3% auto;">
-            <span class="close-modal" onclick="window.closeBlogPreview()"
-                style="top: 1rem; right: 1.5rem; color: white; background: rgba(0,0,0,0.5); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10;">&times;</span>
+            <button class="close-modal" onclick="window.closeBlogPreview()"
+                style="top: 1rem; right: 1.5rem; color: white; background: rgba(0,0,0,0.5); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; border: none; padding: 0; cursor: pointer; line-height: 1;" aria-label="Close modal">&times;</button>
             <!-- Modal Body -->
             <div id="blog-preview-cover"
                 style="height: 300px; background-size: cover; background-position: center; position: relative;"></div>

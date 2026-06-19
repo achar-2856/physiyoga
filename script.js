@@ -48,6 +48,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: true });
     }
 
+    // --- Patient Education Dropdown ---
+    const navDropdown = document.getElementById('nav-patient-education');
+    if (navDropdown) {
+        const dropdownToggle = navDropdown.querySelector('.nav-dropdown-toggle');
+        const isMobile = () => window.innerWidth <= 768;
+
+        // Toggle on click (for mobile where hover doesn't work well)
+        dropdownToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (isMobile()) {
+                navDropdown.classList.toggle('active');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navDropdown.contains(e.target)) {
+                navDropdown.classList.remove('active');
+            }
+        });
+
+        // Update aria-expanded for accessibility
+        const dropdownMenu = navDropdown.querySelector('.nav-dropdown-menu');
+        const toggleExpanded = (state) => {
+            dropdownToggle.setAttribute('aria-expanded', state.toString());
+        };
+
+        navDropdown.addEventListener('mouseenter', () => {
+            if (!isMobile()) toggleExpanded(true);
+        });
+        navDropdown.addEventListener('mouseleave', () => {
+            if (!isMobile()) toggleExpanded(false);
+        });
+        dropdownToggle.addEventListener('click', () => {
+            if (isMobile()) {
+                toggleExpanded(navDropdown.classList.contains('active'));
+            }
+        });
+    }
+
+
     // --- Smooth Scroll ---
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -446,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data.forEach((service, loopIndex) => {
             const card = document.createElement('div');
-            card.className = 'service-card animate-on-scroll';
+            card.className = 'service-card card-fade-in-up';
 
             // If we are showing a limited set, the loopIndex is 0, 1, 2...
             // But we want the index for the modal to be the index in the original servicesData array.
@@ -463,7 +504,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Re-run observer for new elements
-        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+        if (typeof initCardFadeInUp === 'function') {
+            initCardFadeInUp();
+        }
     }
 
     // Render 3 services on home page
@@ -898,4 +941,676 @@ Please confirm my availability. Thank you!`;
             }
         });
     }
+
+    // Scroll Animations
+    if (typeof splitTextLikeReference === 'function') {
+        splitTextLikeReference();
+        observeTextAnimation();
+        initFadeInUp();
+        initRevealAnimation();
+        initCardFadeInUp();
+    }
+
+    // Initialize Premium Upgrades
+    if (typeof initBiomechanicsPose === 'function') {
+        initBiomechanicsPose();
+        initQuestionnaire();
+        initOfflineObserver();
+        
+        // Initialize any static calendar pickers on page load
+        document.querySelectorAll('.calendar-wrapper').forEach(calendar => {
+            initVisualCalendar(calendar);
+        });
+    }
 });
+
+// --- Scroll Animations (BSI & Physiox10 Reference) ---
+function splitTextLikeReference() {
+    document.querySelectorAll('.anim-words').forEach(element => {
+        if (element.dataset.split === 'true') return;
+
+        const html = element.innerHTML;
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+
+        element.innerHTML = '';
+        let charIndex = 0;
+
+        function splitNode(node, parent) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const parts = node.textContent.split(/(\s+)/);
+
+                parts.forEach(part => {
+                    if (part.trim() === '') {
+                        parent.appendChild(document.createTextNode(part));
+                        return;
+                    }
+
+                    const wordWrap = document.createElement('span');
+                    wordWrap.className = 'split-word';
+
+                    [...part].forEach(char => {
+                        const charWrap = document.createElement('span');
+                        charWrap.className = 'split-char';
+                        charWrap.textContent = char;
+                        charWrap.style.transitionDelay = `${0.1 + charIndex * 0.03}s`;
+
+                        wordWrap.appendChild(charWrap);
+                        charIndex++;
+                    });
+
+                    parent.appendChild(wordWrap);
+                });
+            }
+
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const clone = node.cloneNode(false);
+                parent.appendChild(clone);
+
+                [...node.childNodes].forEach(child => {
+                    splitNode(child, clone);
+                });
+            }
+        }
+
+        [...temp.childNodes].forEach(node => {
+            splitNode(node, element);
+        });
+
+        element.dataset.split = 'true';
+    });
+}
+
+function observeTextAnimation() {
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.25
+    });
+
+    document.querySelectorAll('.anim-words').forEach(element => {
+        observer.observe(element);
+    });
+}
+
+function initFadeInUp() {
+    const items = document.querySelectorAll('.fade-in-up');
+    if (items.length === 0) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    items.forEach(item => {
+        observer.observe(item);
+    });
+}
+
+function initRevealAnimation() {
+    const revealItems = document.querySelectorAll('.reveal-image-wrapper');
+    if (revealItems.length === 0) return;
+
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.2,
+        rootMargin: '0px'
+    });
+
+    revealItems.forEach(item => {
+        revealObserver.observe(item);
+    });
+}
+
+function initCardFadeInUp() {
+    const cardItems = document.querySelectorAll('.card-fade-in-up');
+    if (cardItems.length === 0) return;
+
+    const cardObserver = new IntersectionObserver((entries) => {
+        const intersectingEntries = entries.filter(entry => entry.isIntersecting);
+        if (intersectingEntries.length > 0) {
+            intersectingEntries.forEach((entry, index) => {
+                setTimeout(() => {
+                    entry.target.classList.add('is-visible');
+                }, index * 150);
+                cardObserver.unobserve(entry.target);
+            });
+        }
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+
+    cardItems.forEach(item => {
+        if (!item.classList.contains('is-visible')) {
+            cardObserver.observe(item);
+        }
+    });
+}
+
+// --- Light/Dark Mode Toggle Logic ---
+function initTheme() {
+    const themeBtn = document.querySelector('.theme-toggle-btn');
+    if (!themeBtn) return;
+
+    // Determine target theme: Saved choice -> System preference -> default light
+    const savedTheme = localStorage.getItem('theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || (systemDark ? 'dark' : 'light');
+
+    document.documentElement.setAttribute('data-theme', initialTheme);
+    themeBtn.textContent = initialTheme === 'dark' ? '☀️' : '🌙';
+    themeBtn.setAttribute('aria-label', initialTheme === 'dark' ? 'Toggle light mode' : 'Toggle dark mode');
+
+    themeBtn.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+        const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+        document.documentElement.setAttribute('data-theme', targetTheme);
+        localStorage.setItem('theme', targetTheme);
+        themeBtn.textContent = targetTheme === 'dark' ? '☀️' : '🌙';
+        themeBtn.setAttribute('aria-label', targetTheme === 'dark' ? 'Toggle light mode' : 'Toggle dark mode');
+    });
+}
+
+// --- Yoga-Biomechanics Anatomical Card Logic ---
+const posesData = {
+    cobra: {
+        title: "Cobra Pose (Bhujangasana)",
+        art: `<svg class="pose-stick-figure" viewBox="0 0 200 200" width="100%" height="100%">
+            <!-- Ground -->
+            <line x1="20" y1="180" x2="180" y2="180" stroke-width="4" stroke="#94A3B8" />
+            <!-- Legs & Pelvis -->
+            <path d="M 30 180 Q 90 178 120 165" fill="none" stroke-width="8" />
+            <!-- Spine arching up -->
+            <path d="M 120 165 Q 150 145 158 110 Q 163 80 153 70" fill="none" stroke-width="8" />
+            <!-- Head -->
+            <circle cx="153" cy="53" r="14" fill="none" stroke-width="8" />
+            <!-- Arms supporting torso -->
+            <path d="M 145 110 L 138 180" fill="none" stroke-width="8" />
+            <!-- Back Leg (depth) -->
+            <path d="M 115 167 L 100 180" fill="none" stroke-width="6" opacity="0.5" />
+        </svg>`,
+        hotspots: [
+            {
+                id: "lumbar",
+                top: "76%",
+                left: "58%",
+                name: "Lower Back (Spinal Extension)",
+                yogic: "Bhujanga (Serpent) elongation: Opens the Manipura (solar plexus) chakra, promoting inner strength.",
+                clinical: "Actively strengthens the erector spinae and quadratus lumborum muscles, promoting extension range of motion and decompressive core control."
+            },
+            {
+                id: "shoulders",
+                top: "52%",
+                left: "72%",
+                name: "Shoulder & Chest Girdle",
+                yogic: "Heart opening (Anahata): Drawing scapulae down to pull the collarbones wide.",
+                clinical: "Stretches tight pectoral muscles while reinforcing posterior thoracic stabilizer strength (middle/lower trapezius and rhomboids) to combat modern forward-head posture."
+            }
+        ]
+    },
+    dog: {
+        title: "Downward Dog (Adho Mukha Svanasana)",
+        art: `<svg class="pose-stick-figure" viewBox="0 0 200 200" width="100%" height="100%">
+            <!-- Ground -->
+            <line x1="20" y1="180" x2="180" y2="180" stroke-width="4" stroke="#94A3B8" />
+            <!-- Hands to shoulders -->
+            <path d="M 160 175 L 105 105" fill="none" stroke-width="8" />
+            <!-- Shoulders to hips -->
+            <path d="M 105 105 L 65 75" fill="none" stroke-width="8" />
+            <!-- Hips to feet -->
+            <path d="M 65 75 L 35 175" fill="none" stroke-width="8" />
+            <!-- Head -->
+            <circle cx="115" cy="115" r="14" fill="none" stroke-width="8" />
+            <!-- Depth limbs -->
+            <path d="M 100 105 L 148 175" fill="none" stroke-width="6" opacity="0.5" />
+            <path d="M 65 75 L 48 175" fill="none" stroke-width="6" opacity="0.5" />
+        </svg>`,
+        hotspots: [
+            {
+                id: "hamstrings",
+                top: "58%",
+                left: "26%",
+                name: "Hamstrings & Calf Extension",
+                yogic: "Rooting down: Sending energy down the heels into the earth to stabilize the posture.",
+                clinical: "Lengthens the deep fascial posterior chain (hamstrings, calves, and Achilles tendon), reducing micro-stiffness that contributes to sciatic nerve irritation."
+            },
+            {
+                id: "shoulders-dog",
+                top: "56%",
+                left: "58%",
+                name: "Overhead Scapular Stability",
+                yogic: "Sinking the chest: Extending the side body, opening the underarms towards the heart.",
+                clinical: "Builds scapular upward rotation strength and overhead stability by targeting the serratus anterior and lower trapezius muscles."
+            }
+        ]
+    },
+    warrior: {
+        title: "Warrior II (Virabhadrasana II)",
+        art: `<svg class="pose-stick-figure" viewBox="0 0 200 200" width="100%" height="100%">
+            <!-- Ground -->
+            <line x1="20" y1="180" x2="180" y2="180" stroke-width="4" stroke="#94A3B8" />
+            <!-- Front bent leg -->
+            <path d="M 140 180 L 140 130 L 90 120" fill="none" stroke-width="8" />
+            <!-- Back straight leg -->
+            <path d="M 45 180 L 90 120" fill="none" stroke-width="8" />
+            <!-- Torso & neck -->
+            <path d="M 90 120 L 90 70" fill="none" stroke-width="8" />
+            <!-- Head facing front -->
+            <circle cx="90" cy="52" r="14" fill="none" stroke-width="8" />
+            <!-- Front arm -->
+            <path d="M 90 85 L 150 85" fill="none" stroke-width="8" />
+            <!-- Back arm -->
+            <path d="M 90 85 L 30 85" fill="none" stroke-width="8" />
+        </svg>`,
+        hotspots: [
+            {
+                id: "quadriceps",
+                top: "68%",
+                left: "68%",
+                name: "Front Quadriceps (Eccentric Load)",
+                yogic: "Grounding the base: Bending front knee exactly over the ankle for fierce stance stability.",
+                clinical: "Demands high isometric and eccentric quadriceps strength (particularly vastus medialis obliques), stabilizing the patella and strengthening knee extension."
+            },
+            {
+                id: "hips",
+                top: "60%",
+                left: "48%",
+                name: "Hip Abduction & Pelvic Core",
+                yogic: "Opening the pelvis: Leveling the hips sideways while keeping spine tall.",
+                clinical: "Recruits gluteus medius and minimus to prevent pelvic drop, while introducing a safe active stretch on the contralateral hip adductor muscle groups."
+            }
+        ]
+    }
+};
+
+function initBiomechanicsPose() {
+    const tabsContainer = document.querySelector('.biomechanics-tabs');
+    if (!tabsContainer) return;
+
+    const visualArea = document.querySelector('.biomechanics-pose-art');
+    const detailsCard = document.querySelector('.biomechanics-details-card');
+    const tabBtns = document.querySelectorAll('.biomechanics-tab-btn');
+
+    if (!visualArea || !detailsCard) return;
+
+    function renderPose(poseKey) {
+        const pose = posesData[poseKey];
+        if (!pose) return;
+
+        // Render SVG art
+        visualArea.innerHTML = pose.art;
+
+        // Remove old hotspots
+        document.querySelectorAll('.hotspot').forEach(h => h.remove());
+
+        // Render new hotspots
+        pose.hotspots.forEach(hs => {
+            const dot = document.createElement('div');
+            dot.className = 'hotspot';
+            dot.style.top = hs.top;
+            dot.style.left = hs.left;
+            dot.setAttribute('title', hs.name);
+            dot.setAttribute('data-id', hs.id);
+
+            dot.addEventListener('click', () => {
+                document.querySelectorAll('.hotspot').forEach(d => d.classList.remove('active'));
+                dot.classList.add('active');
+
+                // Render details inside card
+                detailsCard.innerHTML = `
+                    <h3 style="color: var(--primary); margin-bottom: 0.5rem;">${hs.name}</h3>
+                    <div style="margin-top: 1rem; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 1rem; margin-bottom: 1rem;">
+                        <h4 style="color: var(--secondary); margin-bottom: 0.25rem; font-size: 1rem;">🧘 Yogic Alignment Focus</h4>
+                        <p style="color: var(--gray); font-size: 0.95rem; line-height: 1.5;">${hs.yogic}</p>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--secondary); margin-bottom: 0.25rem; font-size: 1rem;">⚙️ Clinical Physiotherapy Goal</h4>
+                        <p style="color: var(--gray); font-size: 0.95rem; line-height: 1.5;">${hs.clinical}</p>
+                    </div>
+                `;
+            });
+
+            visualArea.appendChild(dot);
+        });
+
+        // Trigger click on first hotspot by default
+        setTimeout(() => {
+            const firstDot = visualArea.querySelector('.hotspot');
+            if (firstDot) firstDot.click();
+        }, 50);
+    }
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPose(btn.dataset.pose);
+        });
+    });
+
+    // Initial render
+    const activeTab = document.querySelector('.biomechanics-tab-btn.active');
+    if (activeTab) {
+        renderPose(activeTab.dataset.pose);
+    }
+}
+
+// --- Interactive Treatment Questionnaire Quiz ---
+function initQuestionnaire() {
+    const quizCard = document.getElementById('treatment-quiz-card');
+    if (!quizCard) return;
+
+    const steps = quizCard.querySelectorAll('.quiz-step');
+    const progressFill = quizCard.querySelector('.quiz-progress-fill');
+    
+    let currentStep = 0;
+    const answers = {};
+
+    function showStep(index) {
+        steps.forEach(s => s.classList.remove('active'));
+        steps[index].classList.add('active');
+        
+        // Progress Fill
+        const percentage = ((index) / (steps.length - 1)) * 100;
+        if (progressFill) progressFill.style.width = `${percentage}%`;
+    }
+
+    quizCard.querySelectorAll('.quiz-option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const name = btn.dataset.name;
+            const val = btn.dataset.value;
+            answers[name] = val;
+
+            currentStep++;
+            if (currentStep < steps.length - 1) {
+                showStep(currentStep);
+            } else {
+                // Compile results
+                showQuizResults();
+            }
+        });
+    });
+
+    function showQuizResults() {
+        const resultStep = quizCard.querySelector('#quiz-step-result');
+        const recommendationTitle = quizCard.querySelector('#recommendation-title');
+        const recommendationText = quizCard.querySelector('#recommendation-text');
+        const recommendationBtn = quizCard.querySelector('#recommendation-action-btn');
+
+        if (!resultStep || !recommendationTitle) return;
+
+        let title = "";
+        let desc = "";
+        let serviceSlug = "";
+
+        // Simple decision logic based on category
+        const category = answers['category'] || 'spine';
+        
+        if (category === 'spine') {
+            title = "Spine Alignment & Posture Program";
+            desc = "Your answers indicate spinal stiffness or back/neck pain. Our targeted Spine Alignment Programme combines clinical thoracic mobilization with corrective core extension exercises to decompress the spinal disc column.";
+            serviceSlug = "spine-rehabilitation";
+        } else if (category === 'joints') {
+            title = "Joint Mobilisation & Sports Rehab";
+            desc = "Your symptoms point to limb joint pain or instability. We recommend our Joint Mobilisation Rehab, focusing on eccentric leg/arm tracking, structural balance loading, and functional tissue repair.";
+            serviceSlug = "joint-pain-rehab";
+        } else if (category === 'stiffness') {
+            title = "Musculoskeletal Assessment & Yoga Core";
+            desc = "General body stiffness or minor aches are best addressed by our Musculoskeletal Recovery. It integrates evidence-based manual therapy with slow-load Ashtanga spinal alignments.";
+            serviceSlug = "musculoskeletal-physiotherapy";
+        } else {
+            title = "Post-Surgical Functional Recovery";
+            desc = "After surgical interventions, restoring range of motion safely is critical. We recommend our Post-Surgical Rehabilitation, focusing on swelling modulation and gradual strength tracking.";
+            serviceSlug = "post-surgical-rehab";
+        }
+
+        recommendationTitle.textContent = title;
+        recommendationText.textContent = desc;
+        recommendationBtn.setAttribute('data-service', serviceSlug);
+
+        // Bind booking click inside quiz results
+        recommendationBtn.onclick = () => {
+            const serviceSlug = recommendationBtn.getAttribute('data-service');
+            // Open global appointment booking modal
+            const bookBtn = document.querySelector('[data-modal="appointment"]');
+            if (bookBtn) {
+                // Pre-configure branch and service data
+                const modal = document.getElementById('globalModal');
+                if (modal) {
+                    modal.dataset.service = serviceSlug;
+                    modal.dataset.approach = 'clinic';
+                }
+                bookBtn.click();
+            }
+        };
+
+        showStep(steps.length - 1);
+    }
+
+    // Reset button
+    const resetBtn = quizCard.querySelector('.quiz-reset-btn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            currentStep = 0;
+            showStep(0);
+        });
+    }
+
+    // Show initial step
+    showStep(0);
+}
+
+// --- Visual Calendar Date & Time Slot Picker ---
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
+let selectedDate = null;
+let selectedTime = null;
+
+function initVisualCalendar(container) {
+    const calendarContainer = container.querySelector('.calendar-grid-days');
+    const monthYearTitle = container.querySelector('.calendar-month-year');
+    const prevBtn = container.querySelector('.calendar-prev-month');
+    const nextBtn = container.querySelector('.calendar-next-month');
+    const timeSlotsWrapper = container.querySelector('.time-slots-container');
+    const hiddenDateInput = container.querySelector('input[name="booking_date"]');
+    const hiddenTimeInput = container.querySelector('input[name="booking_time"]');
+    const submitBtn = container.closest('form')?.querySelector('button[type="submit"]');
+
+    if (!calendarContainer || !monthYearTitle) return;
+
+    function renderDays() {
+        calendarContainer.innerHTML = '';
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        const firstDayIndex = new Date(currentYear, currentMonth, 1).getDay();
+        const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        // Month Names
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        monthYearTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+        // Add padding empty buttons at start
+        const adjustedOffset = firstDayIndex === 0 ? 6 : firstDayIndex - 1; // start from Monday
+        for (let i = 0; i < adjustedOffset; i++) {
+            const empty = document.createElement('div');
+            calendarContainer.appendChild(empty);
+        }
+
+        // Render month days
+        for (let day = 1; day <= lastDay; day++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'calendar-day-btn';
+            btn.textContent = day;
+
+            const dateValue = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            const targetDate = new Date(currentYear, currentMonth, day);
+            targetDate.setHours(0,0,0,0);
+
+            // Disable past dates and Sundays
+            const isPast = targetDate < today;
+            const isSunday = targetDate.getDay() === 0;
+
+            if (isPast || isSunday) {
+                btn.disabled = true;
+            }
+
+            // Highlighting active selections
+            if (selectedDate === dateValue) {
+                btn.classList.add('selected');
+            }
+
+            btn.addEventListener('click', () => {
+                container.querySelectorAll('.calendar-day-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedDate = dateValue;
+
+                if (hiddenDateInput) {
+                    hiddenDateInput.value = dateValue;
+                    hiddenDateInput.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+
+                // Render slots
+                renderTimeSlots();
+            });
+
+            calendarContainer.appendChild(btn);
+        }
+    }
+
+    function renderTimeSlots() {
+        if (!timeSlotsWrapper) return;
+        timeSlotsWrapper.innerHTML = '';
+
+        if (!selectedDate) {
+            timeSlotsWrapper.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--gray); font-size: 0.9rem;">Please select a date first</p>';
+            return;
+        }
+
+        // Mock slots list
+        const slots = ["09:00 AM", "10:30 AM", "11:30 AM", "02:00 PM", "03:30 PM", "05:00 PM", "06:30 PM"];
+        
+        slots.forEach(time => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'time-slot-btn';
+            btn.textContent = time;
+
+            if (selectedTime === time) {
+                btn.classList.add('selected');
+            }
+
+            btn.addEventListener('click', () => {
+                timeSlotsWrapper.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                selectedTime = time;
+
+                if (hiddenTimeInput) {
+                    hiddenTimeInput.value = time;
+                    hiddenTimeInput.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+
+                // Enable submit button
+                if (submitBtn) submitBtn.disabled = false;
+            });
+
+            timeSlotsWrapper.appendChild(btn);
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.onclick = () => {
+            const tempDate = new Date(currentYear, currentMonth - 1, 1);
+            const today = new Date();
+            if (tempDate.getMonth() >= today.getMonth() || tempDate.getFullYear() > today.getFullYear()) {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                renderDays();
+            }
+        };
+    }
+
+    if (nextBtn) {
+        nextBtn.onclick = () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            renderDays();
+        };
+    }
+
+    // Initial render call
+    renderDays();
+    renderTimeSlots();
+}
+
+// Hook visual calendar logic into form dynamic creations
+const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
+        mutation.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                const calendar = node.querySelector('.calendar-wrapper');
+                if (calendar) {
+                    initVisualCalendar(calendar);
+                }
+            }
+        });
+    });
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
+
+// --- Offline Mode Indicator Logic ---
+function initOfflineObserver() {
+    // Add offline toast container dynamically if not present
+    let toast = document.getElementById('offline-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'offline-toast';
+        toast.className = 'offline-toast';
+        toast.innerHTML = '⚠️ Connection Lost — Browsing cached pages offline';
+        document.body.appendChild(toast);
+    }
+
+    function checkConnection() {
+        if (navigator.onLine) {
+            toast.classList.remove('show');
+        } else {
+            toast.classList.add('show');
+        }
+    }
+
+    window.addEventListener('online', checkConnection);
+    window.addEventListener('offline', checkConnection);
+
+    // Initial check
+    checkConnection();
+}
+
+

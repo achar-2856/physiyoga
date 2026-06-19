@@ -10,6 +10,14 @@
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="modal.css">
+    <!-- OpenGraph SEO Meta Tags -->
+    <meta property="og:title" content="Contact Us | Physiyoga">
+    <meta property="og:description" content="Book an appointment with Dr. Swetha R.M (PT) at our Thurahalli clinic, Bengaluru.">
+    <meta property="og:image" content="images/logo_icon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://localhost:8000/contact.html">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/logo_icon.png">
     <style>
         .form-group {
             margin-bottom: 1.5rem;
@@ -55,7 +63,7 @@
     <nav class="navbar">
         <div class="container">
             <a href="index.html" class="logo">
-                <img src="images/logo_icon.png" alt="Physiyoga Icon" style="display: none;">
+                <img src="images/logo_icon.png" alt="Physiyoga Icon">
                 <div class="logo-text">
                     <span class="logo-title" style="color: var(--secondary);">Physiyoga</span>
                     <span class="logo-subtitle" style="color: var(--secondary);">Movement is <span
@@ -101,19 +109,23 @@
                         </select>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="form-group">
-                            <label class="form-label" for="date">Preferred Date</label>
-                            <input type="date" id="date" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="time">Preferred Time</label>
-                            <select id="time" class="form-input" required>
-                                <option value="">Select Time</option>
-                                <option value="Morning">Morning (9AM - 12PM)</option>
-                                <option value="Afternoon">Afternoon (1PM - 5PM)</option>
-                                <option value="Evening">Evening (6PM - 8PM)</option>
-                            </select>
+                    <div class="form-group">
+                        <label class="form-label">Preferred Date & Time Slot</label>
+                        <div class="calendar-wrapper">
+                            <div class="calendar-header">
+                                <h4 class="calendar-month-year"></h4>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button type="button" class="calendar-nav-btn calendar-prev-month">&lt;</button>
+                                    <button type="button" class="calendar-nav-btn calendar-next-month">&gt;</button>
+                                </div>
+                            </div>
+                            <div class="calendar-grid-header">
+                                <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+                            </div>
+                            <div class="calendar-grid-days"></div>
+                            <div class="time-slots-container"></div>
+                            <input type="hidden" name="booking_date" id="date" required>
+                            <input type="hidden" name="booking_time" id="time" required>
                         </div>
                     </div>
 
@@ -189,7 +201,7 @@
                     <ul class="footer-links" id="footer-quick-links">
                         <li><a href="about.html">About Us</a></li>
                         <li><a href="services.html">Services</a></li>
-                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="education.html">Patient Education</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>

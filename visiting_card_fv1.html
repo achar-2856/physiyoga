@@ -546,6 +546,155 @@
 
     </div>
 
+    <!-- Printo A4/300 DPI layout override script -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const view = urlParams.get('view');
+        if (view === 'front' || view === 'back') {
+            document.body.style.padding = '0';
+            document.body.style.margin = '0';
+            document.body.style.minHeight = 'auto';
+            document.body.style.backgroundColor = '#161616';
+            
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .card-container { gap: 0; }
+                .card {
+                    width: 1075px !important;
+                    height: 720px !important;
+                    box-shadow: none !important;
+                    border: none !important;
+                    border-radius: 0 !important;
+                }
+                
+                /* Front Card Overrides for 91mm x 61mm (300 DPI) */
+                .front {
+                    padding: 95px 110px !important;
+                    justify-content: flex-start !important;
+                    align-items: center !important;
+                }
+                .front-main-content {
+                    gap: 30px !important;
+                }
+                .center-brand {
+                    gap: 30px !important;
+                }
+                .yellow-line {
+                    height: 4px !important;
+                }
+                .brand-text {
+                    font-size: 4.2rem !important;
+                    letter-spacing: 5px !important;
+                }
+                .front-middle-content {
+                    gap: 15px !important;
+                }
+                .front-subtitle {
+                    font-size: 1.3rem !important;
+                    letter-spacing: 5px !important;
+                }
+                .pulse-line {
+                    height: 45px !important;
+                }
+                .front-tagline {
+                    font-size: 1.55rem !important;
+                    letter-spacing: 6px !important;
+                }
+                .front-footer {
+                    position: absolute !important;
+                    bottom: 95px !important; /* safe zone */
+                    left: 0 !important;
+                    width: 100% !important;
+                    gap: 8px !important;
+                }
+                .kannada-text {
+                    font-size: 3.2rem !important;
+                }
+                .kannada-subtitle {
+                    font-size: 1.75rem !important;
+                }
+                .kannada-english-subtitle {
+                    font-size: 1.25rem !important;
+                    letter-spacing: 4px !important;
+                }
+
+                /* Back Card Overrides for 91mm x 61mm (300 DPI) */
+                .back {
+                    padding: 95px 110px !important;
+                    justify-content: space-between !important;
+                    align-items: stretch !important;
+                }
+                .center-person-info {
+                    margin-top: 0 !important;
+                }
+                .name {
+                    font-size: 2.6rem !important;
+                    margin-bottom: 6px !important;
+                    letter-spacing: 2px !important;
+                }
+                .title {
+                    font-size: 1.4rem !important;
+                    letter-spacing: 2px !important;
+                }
+                .back-middle-split {
+                    gap: 30px !important;
+                    margin-top: 20px !important;
+                    margin-bottom: 20px !important;
+                }
+                .contact-info-list {
+                    gap: 20px !important;
+                }
+                .contact-row {
+                    gap: 15px !important;
+                }
+                .contact-icon {
+                    width: 32px !important;
+                    height: 32px !important;
+                }
+                .contact-text {
+                    font-size: 1.9rem !important;
+                    letter-spacing: 1px !important;
+                }
+                .qr-right {
+                    gap: 10px !important;
+                }
+                .qr-code-wrapper {
+                    padding: 10px !important;
+                    border-radius: 8px !important;
+                }
+                .qr-code-img {
+                    width: 180px !important;
+                    height: 180px !important;
+                }
+                .qr-label {
+                    font-size: 1.0rem !important;
+                    letter-spacing: 2px !important;
+                }
+                .address-full-row {
+                    gap: 15px !important;
+                    border-top-width: 3px !important;
+                    padding-top: 15px !important;
+                }
+                .address-icon {
+                    width: 24px !important;
+                    height: 24px !important;
+                    margin-top: 6px !important;
+                }
+                .address-text {
+                    font-size: 1.45rem !important;
+                }
+            `;
+            document.head.appendChild(style);
+
+            if (view === 'front') {
+                document.querySelector('.card.back').style.display = 'none';
+                document.querySelector('.no-print').style.display = 'none';
+            } else if (view === 'back') {
+                document.querySelector('.card.front').style.display = 'none';
+                document.querySelector('.no-print').style.display = 'none';
+            }
+        }
+    </script>
 </body>
 
 </html>

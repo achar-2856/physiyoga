@@ -324,25 +324,30 @@
                                          SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
 
             try {
+                let loggedIn = false;
+
                 if (isSupabaseConfigured) {
-                    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                    const { data, error } = await supabaseClient.auth.signInWithPassword({
-                        email: username,
-                        password: password
-                    });
+                    try {
+                        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                        const { data, error } = await supabaseClient.auth.signInWithPassword({
+                            email: username,
+                            password: password
+                        });
 
-                    if (error) {
-                        throw error;
+                        if (!error && data?.session) {
+                            sessionStorage.setItem('isLoggedIn', 'true');
+                            sessionStorage.setItem('supabaseSession', JSON.stringify(data.session));
+                            loggedIn = true;
+                        } else if (error) {
+                            console.warn('Supabase auth rejected credentials, checking fallback...');
+                        }
+                    } catch (netErr) {
+                        console.warn('Supabase offline/network error, checking fallback...', netErr);
                     }
+                }
 
-                    // Set session flags
-                    sessionStorage.setItem('isLoggedIn', 'true');
-                    sessionStorage.setItem('supabaseSession', JSON.stringify(data.session));
-
-                    // Redirect
-                    window.location.replace('documents.html');
-                } else {
-                    // Fallback to local hardcoded credentials if Supabase is not configured
+                if (!loggedIn) {
+                    // Fallback to local hardcoded credentials if offline or Supabase fails
                     const userHash = await sha256(username);
                     const passHash = await sha256(password);
 
@@ -350,10 +355,14 @@
                         passHash === 'e3281e6c3ec62b14909f3e6c38679837f62dc24d65cd1ba9b1e5ea2a192d65cc') {
 
                         sessionStorage.setItem('isLoggedIn', 'true');
-                        window.location.replace('documents.html');
-                    } else {
-                        throw new Error('Invalid username or password.');
+                        loggedIn = true;
                     }
+                }
+
+                if (loggedIn) {
+                    window.location.replace('documents.html');
+                } else {
+                    throw new Error('Invalid username or password.');
                 }
             } catch (err) {
                 console.error('Login error:', err);

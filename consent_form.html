@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Consent Form | Physiyoga</title>
+    <!-- Google Fonts: Outfit and Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+
+    <style>
+        :root {
+            --primary: #FF9500;
+            --primary-hover: #E68600;
+            --secondary: #0F172A;
+            --accent: #14B8A6;
+            --light-bg: #FDFBF7;
+            --white: #FFFFFF;
+            --gray-100: #F1F5F9;
+            --gray-300: #CBD5E1;
+            --gray-600: #475569;
+            --gray-800: #1E293B;
+            --radius: 12px;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--light-bg);
+            color: var(--secondary);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: var(--white);
+            max-width: 720px;
+            width: 100%;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Form Header */
+        .form-header {
+            background: var(--secondary);
+            color: var(--white);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .form-header h1 {
+            font-family: var(--font-heading);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .form-header h1 span {
+            color: var(--primary);
+        }
+
+        .form-header p {
+            font-size: 14px;
+            color: var(--gray-300);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Step Progress Bar */
+        .progress-bar-container {
+            display: flex;
+            background: #1e293b;
+            padding: 10px 20px;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-300);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: var(--font-heading);
+        }
+
+        .progress-step.active {
+            color: var(--primary);
+        }
+
+        .progress-step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .progress-step.active .progress-step-num {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        /* Form Steps Content */
+        .form-step-content {
+            padding: 40px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .form-step-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-title {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--gray-100);
+            padding-bottom: 10px;
+        }
+
+        /* Form Controls */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label span {
+            color: #ef4444;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: var(--font-body);
+            color: var(--secondary);
+            transition: all 0.2s ease;
+            background: var(--white);
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 149, 0, 0.1);
+        }
+
+        /* Checkbox list grid */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        @media (min-width: 480px) {
+            .checkbox-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: var(--gray-100);
+        }
+
+        .checkbox-item input {
+            margin-top: 4px;
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            font-size: 14px;
+            color: var(--gray-800);
+            line-height: 1.3;
+        }
+
+        /* Radio Options Group */
+        .radio-options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .radio-option-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1.5px solid var(--gray-300);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .radio-option-item.selected {
+            border-color: var(--accent);
+            background: rgba(20, 184, 166, 0.05);
+        }
+
+        .radio-option-item input {
+            cursor: pointer;
+        }
+
+        /* Pain Scale 0-10 Buttons Group */
+        .pain-scale-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .pain-btn {
+            flex: 1;
+            min-width: 32px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid var(--gray-300);
+            background: var(--white);
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pain-btn:hover {
+            background: var(--gray-100);
+        }
+
+        .pain-btn.selected {
+            background: #ef4444;
+            color: var(--white);
+            border-color: #ef4444;
+            box-shadow: 0 4px 8px rgba(239, 68, 68, 0.2);
+        }
+
+        /* Consent Statement Box */
+        .consent-statement-box {
+            background: var(--gray-100);
+            border-radius: var(--radius);
+            padding: 15px 20px;
+            font-size: 14px;
+            color: var(--gray-800);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            border-left: 4px solid var(--primary);
+        }
+
+        /* Signature Pad */
+        .signature-wrapper {
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius);
+            background: #fafafa;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .signature-canvas {
+            display: block;
+            width: 100%;
+            height: 180px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .signature-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .clear-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Navigation Buttons */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: var(--gray-100);
+            border-top: 1px solid rgba(15, 23, 42, 0.05);
+        }
+
+        .btn-nav {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-prev {
+            background: var(--white);
+            color: var(--secondary);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-prev:hover {
+            background: var(--gray-100);
+        }
+
+        .btn-next {
+            background: var(--primary);
+            color: var(--white);
+            margin-left: auto;
+        }
+
+        .btn-next:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-submit {
+            background: var(--accent);
+            color: var(--white);
+            margin-left: auto;
+        }
+
+        .btn-submit:hover {
+            background: #0d9488;
+        }
+
+        /* Success & Error State overlays */
+        .overlay-screen {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .overlay-screen.active {
+            display: flex;
+        }
+
+        .success-icon {
+            font-size: 64px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .success-title {
+            font-family: var(--font-heading);
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .success-desc {
+            font-size: 15px;
+            color: var(--gray-600);
+            max-width: 400px;
+            margin-bottom: 30px;
+        }
+
+        /* Loader */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border-left-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container">
+        <!-- HEADER -->
+        <div class="form-header">
+            <h1>Physi<span>yoga</span></h1>
+            <p>Clinical Patient Consent Form</p>
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div class="progress-bar-container">
+            <div class="progress-step active" id="pstep-1">
+                <div class="progress-step-num">1</div>
+                <span>Info</span>
+            </div>
+            <div class="progress-step" id="pstep-2">
+                <div class="progress-step-num">2</div>
+                <span>Complaint</span>
+            </div>
+            <div class="progress-step" id="pstep-3">
+                <div class="progress-step-num">3</div>
+                <span>History</span>
+            </div>
+            <div class="progress-step" id="pstep-4">
+                <div class="progress-step-num">4</div>
+                <span>Consent</span>
+            </div>
+            <div class="progress-step" id="pstep-5">
+                <div class="progress-step-num">5</div>
+                <span>Sign</span>
+            </div>
+        </div>
+
+        <!-- FORM STEPS -->
+        <form id="consent-form">
+            <!-- STEP 1: PATIENT INFORMATION -->
+            <div class="form-step-content active" id="step-1">
+                <h2 class="step-title">1. Patient Details</h2>
+                
+                <div class="form-group">
+                    <label for="p-name">Full Name <span>*</span></label>
+                    <input type="text" id="p-name" class="form-input" placeholder="Enter patient name" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label for="p-age">Age <span>*</span></label>
+                        <input type="number" id="p-age" class="form-input" placeholder="e.g. 28" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="p-gender">Gender <span>*</span></label>
+                        <select id="p-gender" class="form-select" required>
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="p-occupation">Occupation <span>*</span></label>
+                    <input type="text" id="p-occupation" class="form-input" placeholder="e.g. Software Engineer" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="p-mobile">Mobile Number <span>*</span></label>
+                    <input type="tel" id="p-mobile" class="form-input" placeholder="Enter 10-digit number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="p-email">Email Address</label>
+                    <input type="email" id="p-email" class="form-input" placeholder="e.g. name@example.com">
+                </div>
+            </div>
+
+            <!-- STEP 2: EMERGENCY CONTACT & PRIMARY COMPLAINT -->
+            <div class="form-step-content" id="step-2">
+                <h2 class="step-title">2. Emergency Contact & Symptoms</h2>
+                
+                <div class="form-group">
+                    <label for="p-emergency-name">Emergency Contact Name <span>*</span></label>
+                    <input type="text" id="p-emergency-name" class="form-input" placeholder="Contact person name" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label for="p-emergency-phone">Contact Number</label>
+                        <input type="tel" id="p-emergency-phone" class="form-input" placeholder="Optional phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="p-emergency-relation">Relationship <span>*</span></label>
+                        <input type="text" id="p-emergency-relation" class="form-input" placeholder="e.g. Spouse / Parent" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="p-complaint">Primary Complaint / Reason for Visit <span>*</span></label>
+                    <textarea id="p-complaint" class="form-textarea" rows="3" placeholder="Describe symptoms or reasons for starting physical therapy / rehabilitation..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Pain Scale (On a scale of 0 to 10) <span>*</span></label>
+                    <div class="pain-scale-container" id="pain-buttons">
+                        <!-- Generate buttons dynamically -->
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:5px; font-size:11px; color:var(--gray-600); font-weight:600;">
+                        <span>0 - No Pain</span>
+                        <span>10 - Extreme Unbearable Pain</span>
+                    </div>
+                    <input type="hidden" id="p-pain-scale" value="" required>
+                </div>
+            </div>
+
+            <!-- STEP 3: MEDICAL HISTORY -->
+            <div class="form-step-content" id="step-3">
+                <h2 class="step-title">3. Medical History & Health History</h2>
+                
+                <div class="form-group">
+                    <label for="p-history">Relevant Medical or Surgical History <span>*</span></label>
+                    <textarea id="p-history" class="form-textarea" rows="3" placeholder="List any past treatments, diagnoses, surgeries, or fractures..." required></textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group">
+                        <label for="p-allergies">Any Allergies? <span>*</span></label>
+                        <select id="p-allergies" class="form-select" required>
+                            <option value="">Select option</option>
+                            <option value="NO">NO</option>
+                            <option value="YES">YES</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="pregnant-group">
+                        <label for="p-pregnant">Currently Pregnant? (If applicable)</label>
+                        <select id="p-pregnant" class="form-select">
+                            <option value="NO">NO</option>
+                            <option value="YES">YES</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Do you have a history of any of the following? <span>*</span></label>
+                    <div class="checkbox-grid" id="history-checkboxes">
+                        <!-- Handled dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 4: CLINICAL CONSENTS -->
+            <div class="form-step-content" id="step-4">
+                <h2 class="step-title">4. Treatment Consents</h2>
+                
+                <!-- Q15: Physio Consent -->
+                <div class="form-group">
+                    <label>Physiotherapy Assessment & Treatment Consent <span>*</span></label>
+                    <div class="consent-statement-box">
+                        I voluntarily consent to undergo physiotherapy assessment and treatment. I understand that treatment may include manual therapy, exercise therapy, electrotherapy, dry needling (if applicable), taping, soft tissue techniques, education, and other physiotherapy procedures.
+                    </div>
+                    <div class="radio-options-group">
+                        <div class="radio-option-item" onclick="selectRadio('physio', 'I understand the risks and benefits-consent given')">
+                            <input type="radio" name="physio_consent" id="physio_yes" value="I understand the risks and benefits-consent given" required>
+                            <span class="checkbox-label">I understand the risks and benefits - Consent given</span>
+                        </div>
+                        <div class="radio-option-item" onclick="selectRadio('physio', 'I understand the risks and benifits but i am not willing to consent for this')">
+                            <input type="radio" name="physio_consent" id="physio_no" value="I understand the risks and benifits but i am not willing to consent for this">
+                            <span class="checkbox-label">I do not wish to consent</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q16: Refusal Consent -->
+                <div class="form-group">
+                    <label>Right to Refuse or Withdraw <span>*</span></label>
+                    <div class="consent-statement-box">
+                        I understand that I have the right to ask questions about recommended treatments, to refuse any specific treatment modality, and to stop/withdraw treatment at any point during my recovery program.
+                    </div>
+                    <div class="radio-options-group">
+                        <div class="radio-option-item" onclick="selectRadio('refusal', 'Agree')">
+                            <input type="radio" name="refusal_consent" id="refusal_yes" value="Agree" required>
+                            <span class="checkbox-label">I Agree</span>
+                        </div>
+                        <div class="radio-option-item" onclick="selectRadio('refusal', 'Disagree')">
+                            <input type="radio" name="refusal_consent" id="refusal_no" value="Disagree">
+                            <span class="checkbox-label">Disagree</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q17: Physical Contact -->
+                <div class="form-group">
+                    <label>Consent for Physical Contact <span>*</span></label>
+                    <div class="consent-statement-box">
+                        I understand that physical therapy assessment and manual treatment procedures require direct physical contact, therapeutic touch, and manual assistance by the practitioner.
+                    </div>
+                    <div class="radio-options-group">
+                        <div class="radio-option-item" onclick="selectRadio('contact', 'agree')">
+                            <input type="radio" name="contact_consent" id="contact_yes" value="agree" required>
+                            <span class="checkbox-label">Agree</span>
+                        </div>
+                        <div class="radio-option-item" onclick="selectRadio('contact', 'disagree')">
+                            <input type="radio" name="contact_consent" id="contact_no" value="disagree">
+                            <span class="checkbox-label">Disagree</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q18: Photo/Video -->
+                <div class="form-group">
+                    <label>Photography & Video Recording Consent <span>*</span></label>
+                    <div class="checkbox-grid" id="photo-options">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Q19: Privacy -->
+                <div class="form-group">
+                    <label>Privacy & Confidentiality Agreement <span>*</span></label>
+                    <div class="consent-statement-box">
+                        I understand that my clinical files and personal information are confidential and will not be disclosed to third parties unless required by law or requested by me for referral.
+                    </div>
+                    <div class="radio-options-group">
+                        <div class="radio-option-item" onclick="selectRadio('privacy', 'agree')">
+                            <input type="radio" name="privacy_consent" id="privacy_yes" value="agree" required>
+                            <span class="checkbox-label">Agree</span>
+                        </div>
+                        <div class="radio-option-item" onclick="selectRadio('privacy', 'disagree')">
+                            <input type="radio" name="privacy_consent" id="privacy_no" value="disagree">
+                            <span class="checkbox-label">Disagree</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q20: Teleconsultation -->
+                <div class="form-group">
+                    <label>Consent for Teleconsultation <span>*</span></label>
+                    <div class="consent-statement-box">
+                        I consent to receive virtual assessment and consultation, and acknowledge that remote sessions have limits compared with direct, in-person clinical examinations.
+                    </div>
+                    <div class="radio-options-group">
+                        <div class="radio-option-item" onclick="selectRadio('tele', 'Agree')">
+                            <input type="radio" name="tele_consent" id="tele_yes" value="Agree" required>
+                            <span class="checkbox-label">Agree</span>
+                        </div>
+                        <div class="radio-option-item" onclick="selectRadio('tele', 'Disagree')">
+                            <input type="radio" name="tele_consent" id="tele_no" value="Disagree">
+                            <span class="checkbox-label">Disagree</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Q21: Dry Needling -->
+                <div class="form-group">
+                    <label>Consent for Dry Needling (If applicable)</label>
+                    <div class="consent-statement-box">
+                        Since dry needling has specific procedural risks, I acknowledge that side effects can include localized bruising, bleeding, temporary soreness, fainting, or (in extremely rare cases) pneumothorax.
+                    </div>
+                    <div class="radio-options-group">
+                        <div class="radio-option-item" onclick="selectRadio('needling', 'agree')">
+                            <input type="radio" name="needling_consent" id="needling_yes" value="agree">
+                            <span class="checkbox-label">I consent to Dry Needling</span>
+                        </div>
+                        <div class="radio-option-item" onclick="selectRadio('needling', 'diasgree')">
+                            <input type="radio" name="needling_consent" id="needling_no" value="diasgree">
+                            <span class="checkbox-label">I do not wish to consent</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 5: DECLARATION & SIGNATURE -->
+            <div class="form-step-content" id="step-5">
+                <h2 class="step-title">5. Final Declaration & Signature</h2>
+
+                <!-- Q22: Declaration statement -->
+                <div class="form-group">
+                    <label>Declaration & Voluntary Consent <span>*</span></label>
+                    <div class="consent-statement-box" style="font-style: italic;">
+                        "I have read and understood the information provided. I have had the opportunity to ask questions, and all my questions have been answered satisfactorily. I voluntarily consent to physiotherapy assessment and treatment."
+                    </div>
+                    <div class="radio-options-group">
+                        <div class="radio-option-item" onclick="selectRadio('declare', 'Yes')">
+                            <input type="radio" name="declaration_agree" id="declare_yes" value="Yes" required>
+                            <span class="checkbox-label">Yes, I declare and agree</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signature canvas -->
+                <div class="form-group">
+                    <label>Draw Signature <span>*</span></label>
+                    <div class="signature-wrapper">
+                        <canvas class="signature-canvas" id="sig-pad"></canvas>
+                    </div>
+                    <div class="signature-actions">
+                        <span style="font-size:12px; color:var(--gray-600);">Please sign inside the frame.</span>
+                        <button type="button" class="clear-btn" id="sig-clear-btn">Clear Canvas</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- FORM NAVIGATION -->
+        <div class="form-actions">
+            <button type="button" class="btn-nav btn-prev" id="btn-prev-step" style="display: none;">Previous</button>
+            <button type="button" class="btn-nav btn-next" id="btn-next-step">Next</button>
+        </div>
+
+        <!-- OVERLAY LOADING SCREEN -->
+        <div class="overlay-screen" id="loading-overlay">
+            <div class="spinner"></div>
+            <h3 class="success-title">Submitting Consent Form</h3>
+            <p class="success-desc">Please wait while your form details and signature are stored securely in the registry database...</p>
+        </div>
+
+        <!-- OVERLAY SUCCESS SCREEN -->
+        <div class="overlay-screen" id="success-overlay">
+            <div class="success-icon">✓</div>
+            <h3 class="success-title">Consent Submitted</h3>
+            <p class="success-desc">Thank you! Your clinical consent form has been securely recorded. You may now return the device to the practitioner.</p>
+            <button type="button" class="btn-nav btn-next" onclick="resetConsentForm()" style="margin: 0;">Submit Another</button>
+        </div>
+    </div>
+
+    <!-- CODE SCRIPT LOGIC -->
+    <script>
+        // Init Supabase Client
+        const isSupabaseConfigured = typeof SUPABASE_URL !== 'undefined' &&
+            SUPABASE_URL !== 'YOUR_SUPABASE_URL' &&
+            SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY';
+        
+        const supabaseClient = isSupabaseConfigured ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+        // Health Conditions checkboxes
+        const HEALTH_CONDITIONS = [
+            'Diabetes',
+            'Hypertension',
+            'Heart Disease',
+            'Stroke',
+            'Epilepsy',
+            'Cancer',
+            'Osteoporosis',
+            'Bleeding Disorders',
+            'Pacemaker/Implants',
+            'Other medical conditions',
+            'NONE'
+        ];
+
+        // Photo/Video options
+        const PHOTO_OPTIONS = [
+            'Clinical documentation only',
+            'Progress tracking',
+            'Educational purposes',
+            'Social media/marketing',
+            'NONE'
+        ];
+
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        // Document elements
+        const form = document.getElementById('consent-form');
+        const prevBtn = document.getElementById('btn-prev-step');
+        const nextBtn = document.getElementById('btn-next-step');
+
+        // Dynamic Pain scale setup
+        const painContainer = document.getElementById('pain-buttons');
+        for (let i = 0; i <= 10; i++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'pain-btn';
+            btn.textContent = i;
+            btn.onclick = () => selectPain(i);
+            painContainer.appendChild(btn);
+        }
+
+        // Dynamic checkboxes setup
+        const historyContainer = document.getElementById('history-checkboxes');
+        HEALTH_CONDITIONS.forEach(cond => {
+            const item = document.createElement('label');
+            item.className = 'checkbox-item';
+            item.innerHTML = `
+                <input type="checkbox" name="health_history" value="${cond}" onchange="toggleNoneCheckbox(this)">
+                <span class="checkbox-label">${cond}</span>
+            `;
+            historyContainer.appendChild(item);
+        });
+
+        // Dynamic photo checkboxes
+        const photoContainer = document.getElementById('photo-options');
+        PHOTO_OPTIONS.forEach(opt => {
+            const item = document.createElement('label');
+            item.className = 'checkbox-item';
+            item.innerHTML = `
+                <input type="checkbox" name="photo_consent" value="${opt}" onchange="toggleNonePhoto(this)">
+                <span class="checkbox-label">${opt}</span>
+            `;
+            photoContainer.appendChild(item);
+        });
+
+        // Pain scale selector
+        function selectPain(val) {
+            document.querySelectorAll('.pain-btn').forEach(btn => btn.classList.remove('selected'));
+            const targetBtn = painContainer.children[val];
+            if (targetBtn) targetBtn.classList.add('selected');
+            document.getElementById('p-pain-scale').value = val;
+        }
+
+        // Toggle checkbox helper (NONE disables others)
+        function toggleNoneCheckbox(el) {
+            if (el.value === 'NONE' && el.checked) {
+                document.querySelectorAll('input[name="health_history"]').forEach(input => {
+                    if (input.value !== 'NONE') {
+                        input.checked = false;
+                    }
+                });
+            } else if (el.value !== 'NONE' && el.checked) {
+                document.querySelectorAll('input[name="health_history"]').forEach(input => {
+                    if (input.value === 'NONE') {
+                        input.checked = false;
+                    }
+                });
+            }
+        }
+
+        // Toggle photo NONE
+        function toggleNonePhoto(el) {
+            if (el.value === 'NONE' && el.checked) {
+                document.querySelectorAll('input[name="photo_consent"]').forEach(input => {
+                    if (input.value !== 'NONE') {
+                        input.checked = false;
+                    }
+                });
+            } else if (el.value !== 'NONE' && el.checked) {
+                document.querySelectorAll('input[name="photo_consent"]').forEach(input => {
+                    if (input.value === 'NONE') {
+                        input.checked = false;
+                    }
+                });
+            }
+        }
+
+        // Selected Radio helper style indicator
+        function selectRadio(key, val) {
+            const group = document.querySelectorAll(`input[name="${key}_consent"]`);
+            if (group.length === 0) {
+                const declareGroup = document.querySelectorAll(`input[name="${key}_agree"]`);
+                declareGroup.forEach(input => {
+                    input.checked = (input.value === val);
+                    const parent = input.closest('.radio-option-item');
+                    if (parent) parent.classList.add('selected');
+                });
+                return;
+            }
+            
+            group.forEach(input => {
+                input.checked = (input.value === val);
+                const parent = input.closest('.radio-option-item');
+                if (parent) {
+                    if (input.checked) {
+                        parent.classList.add('selected');
+                    } else {
+                        parent.classList.remove('selected');
+                    }
+                }
+            });
+        }
+
+        // Canvas Signature Pad Logic
+        const canvas = document.getElementById('sig-pad');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let hasSigned = false;
+
+        // Resize Canvas to fit screen resolution dynamically
+        function resizeCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            ctx.scale(ratio, ratio);
+            
+            // Set styles
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#0F172A'; // Navy blue ink color
+            hasSigned = false;
+        }
+
+        // Draw triggers
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const pos = getMousePos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            e.preventDefault();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const pos = getMousePos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            hasSigned = true;
+            e.preventDefault();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        // Hook pad listeners
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        window.addEventListener('mouseup', stopDrawing);
+
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        document.getElementById('sig-clear-btn').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasSigned = false;
+        });
+
+        // Initialize Canvas
+        window.addEventListener('load', () => {
+            resizeCanvas();
+        });
+        window.addEventListener('resize', resizeCanvas);
+
+        // Wizard navigation controller
+        function navigate(direction) {
+            if (direction === 1) {
+                // Validation before moving to the next step
+                if (!validateStep(currentStep)) return;
+            }
+
+            currentStep += direction;
+
+            // Show appropriate step panel
+            document.querySelectorAll('.form-step-content').forEach(step => step.classList.remove('active'));
+            document.getElementById('step-' + currentStep).classList.add('active');
+
+            // Update Progress step colors
+            document.querySelectorAll('.progress-step').forEach((step, idx) => {
+                if (idx + 1 <= currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+
+            // Adjust nav buttons
+            if (currentStep === 1) {
+                prevBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = 'block';
+            }
+
+            if (currentStep === totalSteps) {
+                nextBtn.textContent = 'Submit Consent';
+                nextBtn.className = 'btn-nav btn-submit';
+                // Trigger canvas redraw just in case bounding boxes changed
+                setTimeout(resizeCanvas, 100);
+            } else {
+                nextBtn.textContent = 'Next';
+                nextBtn.className = 'btn-nav btn-next';
+            }
+        }
+
+        prevBtn.addEventListener('click', () => navigate(-1));
+        nextBtn.addEventListener('click', () => {
+            if (currentStep === totalSteps) {
+                submitForm();
+            } else {
+                navigate(1);
+            }
+        });
+
+        // Field validators per step
+        function validateStep(step) {
+            if (step === 1) {
+                const name = document.getElementById('p-name').value.trim();
+                const age = document.getElementById('p-age').value;
+                const gender = document.getElementById('p-gender').value;
+                const occupation = document.getElementById('p-occupation').value.trim();
+                const mobile = document.getElementById('p-mobile').value.trim();
+
+                if (!name || !age || !gender || !occupation || !mobile) {
+                    alert('Please fill out all required fields.');
+                    return false;
+                }
+                if (!/^\d{10}$/.test(mobile.replace(/[- ]/g, ''))) {
+                    alert('Please enter a valid 10-digit mobile number.');
+                    return false;
+                }
+            } else if (step === 2) {
+                const emergencyName = document.getElementById('p-emergency-name').value.trim();
+                const emergencyRelation = document.getElementById('p-emergency-relation').value.trim();
+                const complaint = document.getElementById('p-complaint').value.trim();
+                const painScale = document.getElementById('p-pain-scale').value;
+
+                if (!emergencyName || !emergencyRelation || !complaint || painScale === '') {
+                    alert('Please complete all required symptom and emergency contact details.');
+                    return false;
+                }
+            } else if (step === 3) {
+                const history = document.getElementById('p-history').value.trim();
+                const allergies = document.getElementById('p-allergies').value;
+                
+                const checkedHistory = document.querySelectorAll('input[name="health_history"]:checked');
+
+                if (!history || !allergies) {
+                    alert('Please complete relevant surgical details and allergy checks.');
+                    return false;
+                }
+                if (checkedHistory.length === 0) {
+                    alert('Please select at least one health history option (or check NONE).');
+                    return false;
+                }
+            } else if (step === 4) {
+                const physio = document.querySelector('input[name="physio_consent"]:checked');
+                const refusal = document.querySelector('input[name="refusal_consent"]:checked');
+                const contact = document.querySelector('input[name="contact_consent"]:checked');
+                const privacy = document.querySelector('input[name="privacy_consent"]:checked');
+                const tele = document.querySelector('input[name="tele_consent"]:checked');
+                
+                const checkedPhotos = document.querySelectorAll('input[name="photo_consent"]:checked');
+
+                if (!physio || !refusal || !contact || !privacy || !tele) {
+                    alert('All clinical consent statements (Physiotherapy, Refusal, Contact, Privacy, Teleconsultation) are required.');
+                    return false;
+                }
+                if (checkedPhotos.length === 0) {
+                    alert('Please select photography consent options (or check NONE).');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Submit form data to Supabase database
+        async function submitForm() {
+            // Step 5 validation
+            const declareAgree = document.querySelector('input[name="declaration_agree"]:checked');
+            if (!declareAgree) {
+                alert('You must read and agree to the declaration statement to proceed.');
+                return;
+            }
+            if (!hasSigned) {
+                alert('Please sign inside the frame signature canvas to complete your consent.');
+                return;
+            }
+
+            // Show loading screen
+            document.getElementById('loading-overlay').classList.add('active');
+
+            // Gather values
+            const name = document.getElementById('p-name').value.trim();
+            const age = document.getElementById('p-age').value;
+            const gender = document.getElementById('p-gender').value;
+            const occupation = document.getElementById('p-occupation').value.trim();
+            const mobile = document.getElementById('p-mobile').value.trim().replace(/[- ]/g, '');
+            const email = document.getElementById('p-email').value.trim() || null;
+            const emergencyName = document.getElementById('p-emergency-name').value.trim();
+            const emergencyPhone = document.getElementById('p-emergency-phone').value.trim();
+            const emergencyRelation = document.getElementById('p-emergency-relation').value.trim();
+            const complaint = document.getElementById('p-complaint').value.trim();
+            const painScale = parseInt(document.getElementById('p-pain-scale').value);
+            const history = document.getElementById('p-history').value.trim();
+            const allergies = document.getElementById('p-allergies').value;
+            const pregnant = document.getElementById('p-pregnant').value;
+
+            // Health History list
+            const healthHistory = [];
+            document.querySelectorAll('input[name="health_history"]:checked').forEach(c => healthHistory.push(c.value));
+
+            // Photo Consent list
+            const photoConsent = [];
+            document.querySelectorAll('input[name="photo_consent"]:checked').forEach(c => photoConsent.push(c.value));
+
+            const physioVal = document.querySelector('input[name="physio_consent"]:checked').value;
+            const refusalVal = document.querySelector('input[name="refusal_consent"]:checked').value;
+            const contactVal = document.querySelector('input[name="contact_consent"]:checked').value;
+            const privacyVal = document.querySelector('input[name="privacy_consent"]:checked').value;
+            const teleVal = document.querySelector('input[name="tele_consent"]:checked').value;
+            const needlingVal = document.querySelector('input[name="needling_consent"]:checked')?.value || 'N/A';
+
+            // Get signature image as base64 png
+            const signatureImage = canvas.toDataURL('image/png');
+
+            const payload = {
+                patient_name: name,
+                age: age,
+                gender: gender,
+                occupation: occupation,
+                mobile_number: mobile,
+                email: email,
+                emergency_contact_name: emergencyName,
+                emergency_contact_number: emergencyPhone || null,
+                emergency_relationship: emergencyRelation,
+                primary_complaint: complaint,
+                pain_scale: painScale,
+                medical_history: history,
+                allergies: allergies,
+                pregnant: pregnant,
+                health_history: healthHistory,
+                physio_consent: physioVal,
+                refusal_consent: refusalVal,
+                contact_consent: contactVal,
+                media_consent: photoConsent.join(', '),
+                privacy_consent: privacyVal,
+                tele_consent: teleVal,
+                needling_consent: needlingVal,
+                declaration_agree: declareAgree.value,
+                signature_image: signatureImage
+            };
+
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase database client is not configured. Please contact the administrator.');
+                }
+
+                const { data, error } = await supabaseClient
+                    .from('patient_consent_records')
+                    .insert([payload]);
+
+                if (error) {
+                    throw error;
+                }
+
+                // Hide loader and show success
+                document.getElementById('loading-overlay').classList.remove('active');
+                document.getElementById('success-overlay').classList.add('active');
+
+            } catch (err) {
+                console.error('Submission failed:', err);
+                alert('Database submission failed: ' + (err.message || 'Unknown network error. Please verify database connection.'));
+                document.getElementById('loading-overlay').classList.remove('active');
+            }
+        }
+
+        // Reset form for next patient intake
+        function resetConsentForm() {
+            form.reset();
+            currentStep = 1;
+            
+            // Reset pain buttons
+            document.querySelectorAll('.pain-btn').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('p-pain-scale').value = '';
+
+            // Reset signature canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasSigned = false;
+
+            // Reset step layout
+            document.querySelectorAll('.form-step-content').forEach(step => step.classList.remove('active'));
+            document.getElementById('step-1').classList.add('active');
+
+            // Reset progress steps
+            document.querySelectorAll('.progress-step').forEach((step, idx) => {
+                if (idx === 0) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+
+            // Adjust nav buttons
+            prevBtn.style.display = 'none';
+            nextBtn.textContent = 'Next';
+            nextBtn.className = 'btn-nav btn-next';
+
+            // Hide success screen
+            document.getElementById('success-overlay').classList.remove('active');
+        }
+    </script>
+</body>
+
+</html>

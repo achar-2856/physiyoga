@@ -25,9 +25,9 @@
     <script src="config.js"></script>
 
     <script>
-        // Redirect to documents if already logged in
+        // Redirect to admin portal if already logged in
         if (sessionStorage.getItem('isLoggedIn') === 'true') {
-            window.location.replace('documents.html');
+            window.location.replace('admin.html');
         }
     </script>
 
@@ -360,7 +360,7 @@
                 }
 
                 if (loggedIn) {
-                    window.location.replace('documents.html');
+                    window.location.replace('admin.html');
                 } else {
                     throw new Error('Invalid username or password.');
                 }

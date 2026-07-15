@@ -10,6 +10,8 @@
     <script>
         if (sessionStorage.getItem('isLoggedIn') !== 'true') {
             window.location.replace('login.html');
+        } else {
+            window.location.replace('admin.html');
         }
     </script>
 
@@ -62,6 +64,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         @media (hover: hover) {
             .btn-logout:hover {
                 background-color: #ef4444;
@@ -461,7 +464,8 @@
     </style>
     <!-- OpenGraph SEO Meta Tags -->
     <meta property="og:title" content="Clinic Documents Explorer | Physiyoga">
-    <meta property="og:description" content="Secure clinical documents portal for Dr. Swetha. Select folders to manage clinic assets.">
+    <meta property="og:description"
+        content="Secure clinical documents portal for Dr. Swetha. Select folders to manage clinic assets.">
     <meta property="og:image" content="images/logo_icon.png">
     <meta property="og:type" content="website">
     <meta property="og:url" content="http://localhost:8000/documents.html">
@@ -1292,7 +1296,8 @@
     <div id="blog-preview-modal" class="modal">
         <div class="modal-content" style="max-width: 800px; padding: 0; overflow: hidden; margin: 3% auto;">
             <button class="close-modal" onclick="window.closeBlogPreview()"
-                style="top: 1rem; right: 1.5rem; color: white; background: rgba(0,0,0,0.5); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; border: none; padding: 0; cursor: pointer; line-height: 1;" aria-label="Close modal">&times;</button>
+                style="top: 1rem; right: 1.5rem; color: white; background: rgba(0,0,0,0.5); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; border: none; padding: 0; cursor: pointer; line-height: 1;"
+                aria-label="Close modal">&times;</button>
             <!-- Modal Body -->
             <div id="blog-preview-cover"
                 style="height: 300px; background-size: cover; background-position: center; position: relative;"></div>
